@@ -1,0 +1,219 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.formulario {
+    margin-top: 5rem;
+    .listado-tags {
+        max-height: 200px; /* Ejemplo de altura máxima */
+        overflow-y: auto; /* Habilita el desplazamiento vertical */
+        /* Otros estilos opcionales */
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .campo {
+        display: flex; 
+        align-items: center;
+        margin-bottom: 2rem;
+       
+
+        label {
+            flex: 0 0 10rem;
+        }
+        input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background-color: lighten(v.$gris, 40%);
+        }
+
+        
+        .listado-asignaturas{
+                @include m.tags;
+        }
+        
+    }
+    
+    
+    .campo__asignatura textarea {
+        width: 90%; /* Opcional: Ajusta el ancho según tus necesidades */
+        height: 300px; /* Ajusta la altura según tus necesidades */
+        resize: vertical; /* Permite redimensionar verticalmente */
+        overflow-y: auto; /* Agrega una barra de desplazamiento vertical cuando sea necesario */
+    }
+    .campo__asignatura {
+        display: flex; 
+        align-items: column;
+        margin-bottom: 2rem;
+       
+
+        label {
+            flex: 0 0 10rem;
+        }
+        input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background-color: lighten(v.$gris, 40%);
+        }
+
+        
+        .listado-asignaturas{
+                @include m.tags;
+        }
+        
+    }
+
+
+    .wrapper{
+        width: 100%;
+         background: #e0dcf7;
+        color: black;
+     
+        .section{
+            @include m.grid(1, 2rem);
+            @include m.tablet {
+     
+        }
+        display: none;
+
+
+
+
+
+            .cursoform{
+                .asignaturas__cursos{
+                    align-items: center;
+                    display: flex;
+                    @include m.grid(1, 2rem);
+                    @include m.tablet {
+                        @include m.grid(1, 1rem);
+                    }
+                    margin-top: 1rem;
+                    padding: .5rem 2rem;
+                    border-bottom: 2px solid darken(v.$grisClaro, 5%);
+                    margin-bottom: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                }
+
+
+                .listacurso{               
+                    .listado-tareas{
+                        list-style: none;
+                        padding: 0;
+                        margin-top: 1rem;
+                        text-align: center;
+                        .curso_lista{
+                            margin-top: 1rem;
+                            padding: .5rem 2rem;
+                            border-bottom: 2px solid darken(v.$grisClaro, 5%);
+                            margin-bottom: 1rem;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                    .no-tareas {
+                        text-align: center;
+                    }
+  
+                    }
+
+                }
+                
+                align-items: center;
+                display: flex;
+                @include m.grid(1, 2rem);
+                @include m.tablet {
+                    @include m.grid(1, 1rem);
+                }
+                .nuevoCurso{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    
+                }
+                .tablaCurso{
+                    display: flex; 
+                    flex-direction: column;
+                  
+
+                }
+
+
+
+              
+            }
+            .cursoButton{
+                background-color: #3498db;
+                border: none;
+                font-size: .9rem;
+                padding: .5rem 1rem;
+                text-transform: uppercase;
+                font-weight: 700;
+                border-radius: 1rem;
+    
+                &:hover {
+                    cursor: pointer;
+                }
+
+            }  
+       
+            .button__wrap{
+                background-color: #3498db;
+                display: inline-block;
+                padding: 8px 30px;
+                color: #fff;
+                cursor: pointer;
+                font-size: 14px !important;
+                font-family: 'Open Sans', sans-serif !important;
+                position: absolute;
+                right: 20px;
+                bottom: 20px;
+              }
+
+            
+           
+
+        }
+
+       
+        .is-active, .step-active{
+            display: block;
+        }
+
+        .steps{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            background: #e0dcf7;
+            text-align: center;
+        }
+          
+          
+          .steps li{
+            display: inline-block;
+            margin: 20px;
+            color: #ccc;
+            padding-bottom: 5px;
+        }
+          
+          .steps li.is-active{
+            border-bottom: 1px solid #3498db;
+            color: #3498db;
+        }
+    
+
+
+
+
+          .tabla__cursos{
+
+        }
+          
+      
+    }
+
+}
