@@ -1,8 +1,9 @@
 //Inicialización
+
 const proyectoParams = new URLSearchParams(window.location.search);
 const proyecto = Object.fromEntries(proyectoParams.entries());
 let tagsFiltro = ["-1"];
-
+let tagsSeleccionados = []; // Variable global para almacenar los tags seleccionados
 let idiomaSeleccionado = "es";
 const dims = { height: 700, width: 500 };
 let res; // Declarar la variable res fuera de la función
@@ -10,122 +11,156 @@ let origen;
 let setColor = false;
 let grafico = 1;
 margin = ({top: 10, right: 100, bottom: 0, left: 100})
-var url = window.location.href;
-
-// Analizamos la URL para obtener los parámetros
-const urlParams = new URLSearchParams(window.location.search);
-const gr = Object.fromEntries(proyectoParams.entries());
-
-// Obtenemos el valor del parámetro 'id'
-var idxd = gr.id;
-
-// Verificamos si se encontró el parámetro 'id' y lo mostramos
-if (idxd) {
-    console.log('El valor del parámetro "id" es: ' + idxd);
-} else {
-    console.log('El parámetro "id" no se encontró en la URL.');
-}
 step = 14;
 
+// procesamientoDatos.js
 
+// Creación de elementos
+const crearElemento = (tipo, id, clase, texto) => {
+  const elemento = document.createElement(tipo);
+  if (id) elemento.id = id;
+  if (clase) elemento.classList.add(clase);
+  if (texto) elemento.textContent = texto;
+  return elemento;
+};
 
-obtenerGrafo(proyecto.id);
-function insertargrafo (data,db){
-
-  function obtenerBotonesActivos() {
-    const botones = document.querySelectorAll('.activo'); // Selecciona todos los elementos con la clase "activo"
-    const idBotonesActivos = [];
-
-    botones.forEach(function (boton) {
-        idBotonesActivos.push(boton.id); // Agrega el ID del botón activo al array
-    });
-
-  
-    return idBotonesActivos;
-  }
-
-// Ejemplo de uso
-const botonesActivos = obtenerBotonesActivos();
-
-  
-  if(tagsFiltro[0]=! "-1"){
-    const asignaturasFiltradas = data
-    .flatMap(d => d.asignaturas.filter(a =>
-      botonesActivos.includes(a.cursoID) && 
-      (!a.tags || a.tags.find(tag => tagFiltro.includes(tag))
-    )))
-    .map(a => obtenerNombrePorIdioma(a));
-  
-  }else{
-          
-      
-    asignaturas = data.flatMap(d => d.asignaturas.filter(a => botonesActivos.includes(a.cursoID)))
-    .map(a => obtenerNombrePorIdioma(a));
-
- }
-
- 
-
-dx = d3.max(asignaturas, d => d.length)*3 +d3.max(asignaturas, d => d.length)/1,9
-
-height = (data.flatMap(d => d.asignaturas).length - 1) * step + margin.top + margin.bottom
- 
-
-
-  //Control de barra
-/*
-  
-  const options = [
-    { name: "Order by name", value: (a, b) => d3.ascending(a.nombre, b.nombre) },
-    { name: "Order by group", value: (a, b) => a.group - b.group || d3.ascending(a.nombre, b.nombre) },
-    { name: "Order by degree", value: (a, b) => d3.sum(b.sourceLinks, l => l.value) + d3.sum(b.targetLinks, l => l.value) - d3.sum(a.sourceLinks, l => l.value) - d3.sum(a.targetLinks, l => l.value) || d3.ascending(a.id, b.id) }
-  ];
-  
-  
-  
-  const form = document.createElement("form");
-  form.style.display = "flex";
-  form.style.alignItems = "center";
-  form.style.minHeight = "33px";
-  
-  const select = document.createElement("select");
-  select.setAttribute("name", "i");
-  
-  options.forEach(option => {
-    const optionElement = document.createElement("option");
-    optionElement.textContent = option.name;
-    select.appendChild(optionElement);
+// Añadir opciones al select
+const agregarOpcionesSelect = (select, opciones) => {
+  opciones.forEach(opcion => {
+      const option = document.createElement('option');
+      option.value = opcion.value;
+      option.textContent = opcion.label;
+      select.appendChild(option);
   });
-  
-  form.appendChild(select);
-  
-  let timeout = setTimeout(() => {
-    select.selectedIndex = 1;
-    form.dispatchEvent(new CustomEvent("input"));
-  }, 2000);
-  
-  form.onchange = () => {
-    form.dispatchEvent(new CustomEvent("input")); // Safari
-  };
-  
-  form.oninput = (event) => {
-    if (event.isTrusted) {
-      form.onchange = null;
-      clearTimeout(timeout);
-    }
-    form.value = options[select.selectedIndex].value;
-  };
-  
-  form.value = options[select.selectedIndex].value;
-  
-  const contenido = document.querySelector(".contenido");
-  contenido.appendChild(form);
-  
+};
+
+// Manejar el cambio de idioma
+const manejarCambioIdioma = (select, callback) => {
+  select.addEventListener('change', function () {
+      const selectedLanguage = this.value;
+      idiomaSeleccionado = selectedLanguage;
+      callback();
+  });
+};
+
+// Manejar el cambio de gráfico
+const manejarCambioGrafico = (select, callback) => {
+  select.addEventListener('change', function () {
+      const selectedGrafico = this.value;
+      grafico = selectedGrafico;
+      callback();
+  });
+};
+
+// Crear botones de curso
+const crearBotonesCurso = (cursos, callback) => {
+  cursos.forEach(curso => {
+      const botonCurso = crearElemento('button', curso.id, 'filter-button', `${curso.numero} ${curso.descripcion}`);
+      botonCurso.classList.toggle('activo');
+      botonCurso.addEventListener('click', () => {
+          botonCurso.classList.toggle('activo');
+          callback();
+          botonCurso.style.backgroundColor = botonCurso.classList.contains('activo') ? color(botonCurso.id) : 'rgba(0, 0, 0, 0.5)';
+      });
+      document.getElementById('navbar').appendChild(botonCurso);
+  });
+};
+
+// Manejar el botón de filtrado por tags
+const manejarBotonTag = (callback) => {
+  const botonTag = crearElemento('button', null, 'filter-button', 'Filtrar por Tag');
+  botonTag.classList.toggle('activo');
+  botonTag.addEventListener('click', () => {
+      const tagsArray = res.anoCurso.flatMap(ano => ano.asignaturas.flatMap(asignatura => asignatura.tags.map(tag => tag.descripcion)));
+      const uniqueTags = [...new Set(tagsArray)];
+      callback(uniqueTags);
+  });
+  document.getElementById('navbar').appendChild(botonTag);
+};
+
+// Manejar el botón de toggle del navbar
+const manejarToggleNavbar = () => {
+  const toggleButton = crearElemento('button', 'toggle-navbar', 'toggle-button', '☰');
+  document.getElementById('navbar').appendChild(toggleButton);
+  toggleButton.addEventListener('click', () => {
+      const navbar = document.getElementById('navbar');
+      if (navbar.classList.contains('hidden')) {
+          navbar.classList.remove('hidden');
+          setTimeout(() => { navbar.style.opacity = 1; }, 10);
+      } else {
+          navbar.style.opacity = 0;
+          setTimeout(() => { navbar.classList.add('hidden'); }, 500);
+      }
+  });
+};
+
+
+async function obtenerGrafo(id) {
+  try {
+      const url = `http://localhost/UpTask_MVC/public/index.php/api/grafo?id=${id}`;
+      const respuesta = await fetch(url);
+      const resultado = await respuesta.json();
+      origen = resultado.respuesta.curso;
+      res = { ...origen };
+
+      const navbar = document.getElementById('navbar');
+
+      manejarToggleNavbar();
+
+      const selectLanguage = crearElemento('select', 'language-select', 'filter-button');
+      agregarOpcionesSelect(selectLanguage, [
+          { value: 'es', label: 'Español' },
+          { value: 'eu', label: 'Euskera' },
+          { value: 'en', label: 'Inglés' }
+      ]);
+      manejarCambioIdioma(selectLanguage, () => InicializarGrafo(res));
+      navbar.appendChild(selectLanguage);
+
+      const selectGrafo = crearElemento('select', 'grafo-select', 'filter-button');
+      agregarOpcionesSelect(selectGrafo, [
+          { value: 1, label: 'Grafo' },
+          { value: 2, label: 'Circunferencia' },
+          { value: 4, label: 'Árbol' },
+      ]);
+      manejarCambioGrafico(selectGrafo, () => InicializarGrafo(res));
+      navbar.appendChild(selectGrafo);
+
+      manejarBotonTag(mostrarTags);
+
+      crearBotonesCurso(res.anoCurso, filtrarCursos);
+
+      InicializarGrafo(res);
+
+  } catch (error) {
+      console.error("Error al obtener los datos del grafo:", error);
+  }
+}
+
+async function InicializarGrafo(db){
+  // data & firebase hook-up
+  var data = [];
+  db.anoCurso.forEach(ano =>{
+    const doc = {...ano, id: ano.id};
+    data.push(doc)
+  })
+
+  const cursoFiltrado = { ...data }; // Copia el objeto original
+
+    insertargrafo(data,db);
+
 
   
-  
-*/  
-//const viewof_order = form;
+}
+
+
+//Ejecución
+obtenerGrafo(proyecto.id);
+
+
+
+function obtenerBotonesActivos() {
+  return Array.from(document.querySelectorAll('.activo')).map(boton => boton.id);
+}
 function arc(d) {
   
   const y1 = d.source.y;
@@ -150,7 +185,34 @@ function arc2(d) {
   const r = Math.abs(y2 - y1) /1.7;
   return `M${margin.left},${y1}A${r},${r} 0,0,${y1 < y2 ? 1 : 0} ${margin.left},${y2}`;
 }
+function insertargrafo (data,db){
 
+const botonesActivos = obtenerBotonesActivos();
+
+
+// Si tiene -1 significa que no hay ningun tag en uso por lo que no hay que filtrar nada
+if (tagsFiltro[0] !== "-1") {
+  const asignaturasFiltradas = data.flatMap(d => 
+      d.asignaturas.filter(asignatura => {
+          const cursoMatch = botonesActivos.includes(asignatura.cursoID);
+          const tagMatch = asignatura.tags && asignatura.tags.some(tag => tagsFiltro.includes(tag.descripcion));
+          return cursoMatch && tagMatch;
+      })
+  );
+
+  asignaturas = asignaturasFiltradas.flatMap(asignatura => [obtenerNombrePorIdioma(asignatura)]);
+} else {
+  asignaturas = data.flatMap(d => 
+      d.asignaturas.filter(a => botonesActivos.includes(a.cursoID))
+  ).map(a => obtenerNombrePorIdioma(a));
+}
+
+ 
+
+dx = d3.max(asignaturas, d => d.length)*3 +d3.max(asignaturas, d => d.length)/1,9
+
+height = (data.flatMap(d => d.asignaturas).length - 1) * step + margin.top + margin.bottom
+ 
 function obtenerNombrePorIdioma(obj) {
 
   // Verifica si obj tiene la propiedad 'info' y no está vacía
@@ -173,12 +235,7 @@ function obtenerNombrePorIdioma(obj) {
   // Si obj.info está vacío o no se encuentra el idioma seleccionado ni el primer idioma, devuelve obj.nombre
   return obj.asignatura;
 }
-//Nodos
 
-function obtenerAñoCurdo(id){
-  data
-
-}
 function obtenersSiglaPorIdioma(obj) {
  
 
@@ -221,35 +278,18 @@ const nodes = data.flatMap(curso => curso.asignaturas.map(obj => {
   };
 }));
 
-// Crea un conjunto de datos de relaciones basadas en etiquetas en común
 const relaciones = [];
 
-for (let i = 0; i < nodes.length; i++) {
-  for (let j = i + 1; j < nodes.length; j++) {
-    const tagsAsignatura1 = nodes[i].tags.map(tag => tag.descripcion);
-    const tagsAsignatura2 = nodes[j].tags.map(tag => tag.descripcion);
-    const etiquetasComunes = tagsAsignatura1.filter(tag => tagsAsignatura2.includes(tag));
-
-    if (etiquetasComunes.length > 0) {
-      relaciones.push({ source: nodes[i], target: nodes[j] });
-    }
-  }
-}
 const nodeById = new Map(nodes.map(d => [d.id, d]));
-
-
-
-
-
 
 const allLinks = data.flatMap(d => d.asignaturas.flatMap(obj =>
   obj.relaciones.map(x => ({
     source: nodeById.get(x.id_asignatura1),
     target: nodeById.get(x.id_asignatura2),
-    value: x.descripcion
+    value: x.descripcion,
+    color: x.color
   }))
 ));
-
 const links = allLinks.filter((link) => link.target !== undefined);
 
 for (const link of links) {
@@ -257,14 +297,7 @@ for (const link of links) {
   source.sourceLinks.push(link);
   target.targetLinks.push(link);
  
-}
-
-const graph = { nodes, links };
-
-
-
-
-
+}const graph = { nodes, links };
 escalax = d3.scaleLinear()
   .domain([0, dx]) // Establece el dominio de la escala
   .range([0, margin.left ]);
@@ -391,7 +424,7 @@ const path = container.insert("g", "*")
 .enter()
 .append("path")
 .attr("stroke", d => {
-  const pathColor = d.source.group === d.target.group ? color(d.source.group) : color(d.target.group);
+  const pathColor = d.source.group === d.target.group ? color(d.source.group) : color(d.source.group);
   // Establece el color del camino
   return pathColor;
 })
@@ -409,7 +442,7 @@ path.each(function(d) {
     .attr("viewBox", "0 0 10 10")
     .attr("refX", 16) // Ajusta el desplazamiento a la derecha aquí
     .attr("refY", 5)
-    .attr("markerWidth", 5)
+    .attr("markerWidth", 20)
     .attr("markerHeight", 5)
     .attr("orient", "auto-start-reverse");
 
@@ -463,9 +496,11 @@ path.each(function(d) {
     miFuncionExterna(d, pvg,color,relaciones);
   });
 
+//Imprimir Grafo principal
 
  
   if(grafico == 1){
+   
     //imprimirNodoColumna(db,svg,color)
     imprimirTodosNodos(db,pvg,color)
  
@@ -478,8 +513,10 @@ path.each(function(d) {
     updateGraph(svg, nodes, label, path, path2, overlay, container, dims, margin, rec);
 
 }else if (grafico == 4){
-disperseCanvas();
-const width = 928;
+
+
+  //disperseCanvas();
+const width = 1928;
 const marginTop = 10;
 const marginRight = 10;
 const marginBottom = 10;
@@ -504,7 +541,8 @@ const marginLeft = 40;
         .map(x => ({
           source: x.id_asignatura1,
           target: x.id_asignatura2,
-          value: x.descripcion
+          descripcion: x.descripcion,
+          tipo: container.color
         }))
         .filter(link => asignaturaIds.includes(link.source) && asignaturaIds.includes(link.target))
     )
@@ -714,7 +752,7 @@ const marginLeft = 40;
           if (d.data && d.data.name) {
           return d.data.name;
         } else {
-          console.log(`Node ${d.id} has undefined data or name"`);
+      
           return "prueba";
         }
       })
@@ -736,7 +774,7 @@ const marginLeft = 40;
     // Transition exiting nodes to the parent's new position.
     const nodeExit = node.exit().transition(transition).remove()
       .attr("transform", d => {
-        console.log(`Exiting node ${d.id}: translate(${source.y},${source.x})`);
+      
         return `translate(${source.y},${source.x})`;
       })
       .attr("fill-opacity", 0)
@@ -749,12 +787,17 @@ const marginLeft = 40;
     // Enter any new links at the parent's previous position.
     const linkEnter = link.enter().append("path")
       .attr("d", d => {
-        
+        console.log('Quiero Saber', d);
         const o = { x: source.x0, y: source.y0 };
 
     
         return diagonal({ source: o, target: o });
-      }).attr("stroke", d => color(d.target.data.group));
+      }).attr("stroke", d => color(d.target.data.group))  .attr("data-value", d => d.descripcion)
+      .attr("data-tipo", d => d.tipo).on("click", (event, d) => {
+        if (d.value) {
+            mostrarInformacion(d);
+        }
+    });;
   
     // Transition links to their new position.
     link.merge(linkEnter).transition(transition)
@@ -794,14 +837,25 @@ const marginLeft = 40;
     .attr("height", 700)
     .attr("viewBox", [-marginLeft, -marginTop, width, dx])
     .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;");
+
+    const g2= pvg.append('g'); // Asegúrate de crear el elemento 'g' y asignarlo a la variable 'container'
+
+const zoom = d3.zoom()
+.scaleExtent([0.1, Math.min(width, height)])
+.on('zoom', () => {
+g2.attr('transform', d3.event.transform); // Realiza el zoom y la reducción del tamaño
+this.xAxis.call(this.xScale.scale(d3.event.transform.rescaleX(this.xScale)));
+this.yAxis.call(this.yScale.scale(d3.event.transform.rescaleY(this.yScale)));
+});
+pvg.call(zoom);
   
-  const gLink = pvg.append("g")
+  const gLink = g2.append("g")
     .attr("fill", "none")
     .attr("stroke", "#555")
     .attr("stroke-opacity", 0.4)
     .attr("stroke-width", 1.5);
   
-  const gNode = pvg.append("g")
+  const gNode = g2.append("g")
     .attr("cursor", "pointer")
     .attr("pointer-events", "all");
   
@@ -841,14 +895,14 @@ root.each(d => {
 }  
 
 
-svg.node();
+pvg.node();
 
 
 }
 
 
 function updateGraph(svg, nodes, label, path, path2, overlay, container, dims, margin,rec) {
-  disperseGrafico()
+  //disperseGrafico()
   const dx = 100; // Cantidad a mover hacia la derecha
   const dy = 0; // Cantidad a mover hacia abajo
 
@@ -948,7 +1002,9 @@ overlay.on("click", d =>{
 
 
 
-function miFuncionExterna(data, svg,color,relaciones) {
+function miFuncionExterna(data, svg, color, relaciones) {
+  svg.selectAll('.parent-circle').remove();
+  svg.selectAll("*").remove();
 
   svg.selectAll('.node').remove();
   svg.selectAll('.link').remove();
@@ -969,409 +1025,211 @@ function miFuncionExterna(data, svg,color,relaciones) {
     .hover g.secondary text {
       fill: #333;
     }
-    .hover path.primary
-     {
+    .hover path.primary {
       stroke: #333;
       stroke-opacity: 1;
     }
   `);
 
-
+ 
   var width = 500;
   var height = 700;
 
   svg.attr("viewBox", [0, 0, width, height]);
 
-  const container = svg.append('g'); // Asegúrate de crear el elemento 'g' y asignarlo a la variable 'container'
-const zoom = d3.zoom()
-  .scaleExtent([0.1, Math.min(width, height)])
-  .on('zoom', () => {
+  const container = svg.append('g');
+  const zoom = d3.zoom()
+    .scaleExtent([0.1, Math.min(width, height)])
+    .on('zoom', () => {
+      container.attr('transform', d3.event.transform);
+    });
 
-    container.attr('transform', d3.event.transform); // Realiza el zoom y la reducción del tamaño
-    this.xAxis.call(this.xScale.scale(d3.event.transform.rescaleX(this.xScale)));
-    this.yAxis.call(this.yScale.scale(d3.event.transform.rescaleY(this.yScale)));
+  svg.call(zoom);
+
+  function zoomed(event) {
+    container.attr('transform', event.transform);
+  }
+
+  const relacionesFiltradas = relaciones.filter(relacion => {
+    return relacion.target.id === data.id;
   });
-
-svg.call(zoom);
-
-
-function zoomed(event) {
-
-  container.attr('transform', event.transform);
-}
-const relacionesFiltradas = relaciones.filter(relacion => {
-  return relacion.source.id === data.id || relacion.target.id === data.id;
-});
-
 
   var sourceLinks = data.sourceLinks;
   var targetLinks = data.targetLinks;
 
- 
+
   var allLinks = sourceLinks.concat(targetLinks).concat(relacionesFiltradas);
- 
+
   var nodeIds = new Set();
   allLinks.forEach(function(link) {
+  
     nodeIds.add(link.source);
     nodeIds.add(link.target);
   });
   var centralNodeId = data.id;
 
-
   var centralNodeGroups = new Set();
+  
+  // Comentado porque no se usa
+  /*
   allLinks.forEach(function(link) {
+    if (link.source.id === centralNodeId) {
+      centralNodeGroups.add(link.target.group);
+    }
 
-
-
-  if (link.source.id === centralNodeId) {
- 
-    centralNodeGroups.add(link.target.group);
-  }
-
-  if (link.target.id === centralNodeId) {
-    centralNodeGroups.add(link.source.group);
-  }
-});
-
-var groupNodes = [];
-var groupIndex = 0;
-var numGroups = centralNodeGroups.size;
-var anglePerGroup = 2 * Math.PI / numGroups;
-var r = 200; // Ajusta el radio a tu preferencia
-
-centralNodeGroups.forEach(function(group) {
-  var angle = groupIndex * anglePerGroup;
-  var x =  Math.cos(angle) * r;
-  var y =  Math.sin(angle) * r;
-  groupNodes.push({
-    id: group,
-    group: group,
-    x: x,
-    y: y,
-    isGroup: true
+    if (link.target.id === centralNodeId) {
+      centralNodeGroups.add(link.source.group);
+    }
   });
-  groupIndex++;
-});
+  */
 
+  var groupNodes = [];
+  var groupIndex = 0;
+  var numGroups = centralNodeGroups.size;
+  var anglePerGroup = 2 * Math.PI / numGroups;
+  var r = 200; // Ajusta el radio a tu preferencia
 
+  centralNodeGroups.forEach(function(group) {
+    var angle = groupIndex * anglePerGroup;
+    var x =  Math.cos(angle) * r;
+    var y =  Math.sin(angle) * r;
+    groupNodes.push({
+      id: group,
+      group: group,
+      x: x,
+      y: y,
+      isGroup: true
+    });
+    groupIndex++;
+  });
 
+ 
   var nodes = [];
   nodeIds.forEach(function(nodeId) {
     nodes.push({
-      id: nodeId.nombre,
-      semestre: nodeId.semestre,
+      id: nodeId.id,
       nombre: nodeId.nombre,
+      semestre: nodeId.semestre,
       group: nodeId.group,
       isGroup: false
-
     });
   });
- 
- 
-  nodes = nodes.concat(groupNodes);
-
-  var groupLinks = [];
-groupNodes.forEach(function(groupNode) {
-  
-    groupLinks.push({
-
-      source: data.nombre,
-      target: groupNode.id,
-      value: 1,
-     
-    });
-  
- 
-});
-
-
-  var links = [];
-  allLinks.forEach(function(link) {
 
 
 
-    if(link.source.id == centralNodeId){
-
-    links.push({
-      source: link.target.group,
-      target: link.target.nombre,
-      value: link.value
-    });
-  }
-
-    if(link.target.id == centralNodeId){
-
-   
-    links.push({
-      source: link.source.group,
-      target: link.source.nombre,
-      value: link.value
-    });
-  }
+  var links = allLinks.map(function(link) {
+    return {
+      source: link.source.id,
+      target: link.target.id,
+      value: link.value,
+      color: link.color
+    };
   });
-//group links une el nodo central a los cuadrados
-  links = links.concat(groupLinks);
- 
+
+
 
   var dataset = {
     nodes: nodes,
-    groupNodes: groupNodes,
     links: links
   };
-
-
 
   const simulation = d3.forceSimulation(dataset.nodes)
     .force("link", d3.forceLink(dataset.links).id(d => d.id).distance(400))
     .force("charge", d3.forceManyBody().strength(-800))
     .force("center", d3.forceCenter(width / 2, height / 2));
-    
-   
 
   var link = container.selectAll(".link")
     .data(dataset.links)
     .enter()
     .append("line")
-
     .attr("class", "link")
     .attr("stroke", "#aaa")
-    .attr("stroke-width", 2);
+    .attr("stroke-width", function(d) {
+     
+      // Utilizar el campo 'nivel' para asignar el grosor de línea
 
-    var node = container.selectAll(".node")
-    .data(dataset.nodes.filter(d => !d.isGroup)) // Filtra los nodos individuales
+      return Number(d.color)+1* 1.5; // Puedes ajustar el valor multiplicador según tus preferencias
+    })  .on("mouseover", function(d) {
+   
+      d3.select(this).attr("stroke", "red").attr("stroke-width", function(d) {
+          return (Number(d.color) + 1) * 4; // Aumenta el grosor para resaltar
+      });
+  })
+  .on("mouseout", function(d) {
+      d3.select(this).attr("stroke", "#aaa").attr("stroke-width", function(d) {
+          return (Number(d.color) + 1) * 1.5; // Vuelve al grosor original
+      })
+  }).on("click",d => {
+
+    mostrarRelacion(d)
+  }).attr("marker-end", d => `url(#arrow-${d.source.group}-${d.target.group})`).style("stroke", "#aaa");
+
+  var node = container.selectAll(".node")
+    .data(dataset.nodes.filter(d => !d.isGroup))
     .enter()
     .append("circle")
     .attr("class", "node")
     .attr("r", 15)
-    .attr("fill", d => color(d.group)).on("mouseover", function(d) {
-      svg.classed("hover", true);
-      label.classed("primary", n => n === d);
-      label.classed("secondary", n => n.sourceLinks.some(l => l.target === d) || n.targetLinks.some(l => l.source === d));
-      path.classed("primary", l => l.source === d || l.target === d).filter(".primary").raise();
+    .attr("fill", d => color(d.group))
+    .on("mouseover", function(d) {
+      
     }).on("mouseout", d => {
-      svg.classed("hover", false);
-      label.classed("primary", false);
-      label.classed("secondary", false);
-      path.classed("primary", false).order();
-    })
-   ;
-   
+      
+    }).on("click",d => {
+     
+    });
 
-  var groupNode = container.selectAll(".group-node")
-    .data(dataset.nodes.filter(d => d.isGroup)) // Filtra los group nodes
-    .enter()
-    .append("rect")
-    .attr("class", "group-node")
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("fill", d => color(d.group)) .call(drag(simulation));
-    
-    var labels = container.selectAll(".label")
+  var labels = container.selectAll(".label")
     .data(dataset.nodes)
     .enter()
     .append("text")
     .attr("class", "label")
     .attr("fill", d => d3.color(color(d.group)).darker(5))
-    .text(d => d.sigla);
-   
-    node.call(drag(simulation));
-    
+    .text(d => d.nombre);
 
-
-    // ZOOM
-
+  node.call(drag(simulation));
 
   simulation.on("tick", () => {
     link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
 
     node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
-        
-   groupNode.attr("x", d => d.x - 10) // Ajusta la posición x del cuadrado
-        .attr("y", d => d.y - 10); // Ajusta la posición y del cuadrado
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
 
-   labels.attr("x", d => d.x + 8)
+    labels
+      .attr("x", d => d.x + 10)
       .attr("y", d => d.y + 5);
-     
   });
 
-
-    
- 
   function drag(simulation) {
-   
-  function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-  
-  function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-  }
-  
-  function dragended(d) {
-    if (!d3.event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-  
-  return d3.drag()
+    function dragstarted(d) {
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    return d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended);
-}
-
-
-  
-}
-
-
-async function obtenerGrafo(id){
-  try {
-  
-      const url = `http://localhost/UpTask_MVC/public/index.php/api/grafo?id=${idxd}`;
-      const respuesta = await fetch(url);
-      const resultado = await respuesta.json();
-      origen = resultado.respuesta.curso;
-
-      res = origen 
-    
-
-      const navbar = document.getElementById('navbar');
-
-// Crea el elemento select
-const selectLanguage = document.createElement('select');
-selectLanguage.id = 'language-select';
-
-// Define las opciones del select
-const languages = [
-    { value: 'es', label: 'Español' },
-    { value: 'eu', label: 'Euskera' },
-    { value: 'en', label: 'Inglés' }
-];
-
-
-
-// Agrega las opciones al select
-languages.forEach(language => {
-    const option = document.createElement('option');
-    option.value = language.value;
-    option.textContent = language.label;
-    selectLanguage.appendChild(option);
-});
-
-// Agrega un evento para cambiar el idioma al seleccionar una opción
-selectLanguage.addEventListener('change', function () {
-    const selectedLanguage = this.value;
-    idiomaSeleccionado = selectedLanguage;
-    
-    InicializarGrafo(res)  
-    // Puedes agregar aquí la lógica para cambiar el idioma
-});
-
-// Crea el elemento select
-const selectGrafo = document.createElement('select');
-selectGrafo.id = 'grafo-select';
-
-// Define las opciones del select
-const grafos = [
-    { value: 1, label: 'Grafo' },
-    { value: 2, label: 'Circurferencia' },
-    { value: 3, label: 'Listado' },
-    { value: 4, label: 'Árbol' },
-];
-
-// Agrega las opciones al select
-grafos.forEach(grafo => {
-    const option = document.createElement('option');
-    option.value = grafo.value;
-    option.textContent = grafo.label;
-    selectGrafo.appendChild(option);
-});
-
-// Agrega un evento para cambiar el idioma al seleccionar una opción
-selectGrafo.addEventListener('change', function () {
-    const selectedLanguage = this.value;
-    grafico = selectedLanguage;
-    
-    InicializarGrafo(res)  
-    // Puedes agregar aquí la lógica para cambiar el idioma
-});
-
-
-
-selectGrafo.classList.add("filter-button"); 
-selectLanguage.classList.add("filter-button"); 
-
-
-// Agrega el select al elemento "navbar"
-navbar.appendChild(selectLanguage);
-
-
-
-
-const botonTag = document.createElement('button'); // Crear un elemento de botón
-      botonTag.classList.add('filter-button'); 
-      botonTag.classList.toggle('activo');
-      botonTag.addEventListener('click', () => {
-
-        // Utilizar map para recopilar todos los tags únicos
-const tagsArray = res.anoCurso.flatMap((ano) =>
-ano.asignaturas.flatMap((asignatura) =>
-  asignatura.tags.map((tag) => tag.descripcion)
-)
-);
-
-// Convertir el array de tags en un conjunto para eliminar duplicados
-const uniqueTags = [...new Set(tagsArray)];
-        mostrarTags(uniqueTags);
-      });
-      botonTag.textContent = "Filtrar por Tag" // Establecer el texto del botón como el nombre del curso
-      navbar.appendChild(botonTag); // Agregar el botón al div 'navbar'
-      
-  
-
-
-navbar.appendChild(selectGrafo);
-      res.anoCurso.forEach(curso => {
-       
-        const botonCurso = document.createElement('button'); // Crear un elemento de botón
-        botonCurso.classList.add('filter-button'); 
-        botonCurso.id = curso.id;
-         botonCurso.classList.toggle('activo');
-        botonCurso.addEventListener('click', () => {
-          botonCurso.classList.toggle('activo'); // Alternar la clase 'activo'
-         filtrarCursos(); // Llamar a la función para filtrar los cursos
-         if (botonCurso.classList.contains('activo')) {
-          const buttonColor = color(botonCurso.id);
-    // Establece el color de fondo del botón
-        botonCurso.style.backgroundColor = buttonColor;
-         
-        } else {
-          // Color más apagado (puedes ajustar el valor según tu preferencia)
-          botonCurso.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Por ejemplo, color más transparente
-        }
-        });
-        botonCurso.textContent = curso.numero + " "+ curso.descripcion; // Establecer el texto del botón como el nombre del curso
-        navbar.appendChild(botonCurso); // Agregar el botón al div 'navbar'
-        
-      });
-
-      InicializarGrafo(res)    
-   
-  } catch (error) {
-      console.log(error);
-    
   }
- 
 }
+
 
 
 function filtrarCursos() {
@@ -1400,30 +1258,7 @@ aux.anoCurso = aux.anoCurso.filter(ano => botonesActivos.includes(ano.id));
 
 }
 
-async function InicializarGrafo(db){
 
-
-
-        // data & firebase hook-up
-        var data = [];
-
-
-        db.anoCurso.forEach(ano =>{
-          const doc = {...ano, id: ano.id};
-
-          data.push(doc)
-        })
-      
-
-        const cursoFiltrado = { ...data }; // Copia el objeto original
-      
-  
-          insertargrafo(data,db);
-
-
-
-        
-}
 function imprimirTimeLine(aux, svg, color, relaciones) {
 
   updateLista();
@@ -1434,331 +1269,289 @@ function imprimirTimeLine(aux, svg, color, relaciones) {
 
 
 
-function imprimirNodos(aux, svg, color) {
+   function imprimirNodos(aux, svg, color) {
+    console.log('aux',aux,'svg')
+  
+    var data2 = [];
+    width = 600;
+    radius = width / 6;
+    aux.anoCurso.forEach(ano => {
+      const doc = { ...ano, id: ano.id };
+      data2.push(doc);
+    });
 
-  var data2 = [];
-  width =450;
-  radius = width / 6
-  aux.anoCurso.forEach(ano =>{
-    const doc = {...ano, id: ano.id};
-
-    data2.push(doc)
-  })
- console.log('pruebaaaaaaaaaaaaaaaaaaaaa', data2)
-
-  const asignaturaIds = data2.flatMap(d => d.asignaturas.map(a => a.id));
-
-  const links = data2.flatMap(d =>
-    d.asignaturas.flatMap(obj =>
-      obj.relaciones
-        .map(x => ({
-          source: x.id_asignatura1,
-          target: x.id_asignatura2,
-          value: x.descripcion
-        }))
-        .filter(link => asignaturaIds.includes(link.source) && asignaturaIds.includes(link.target))
-    )
-  );
-
- var asignaturas = data2.flatMap(d => d.asignaturas);
-
-
-
-function transformData(data, links, asignaturas) {
-  const { nombreCurso, universidadCurso, anoCurso } = data;
-
-  // Modificamos el nombre y creamos el atributo "children" para cada curso
-  const modifiedCurso = {
-    name: nombreCurso,
-    children: transformAnoCurso(anoCurso, links, asignaturas), // Llamamos a una función para transformar los datos de "anoCurso"
-  };
-
-  return modifiedCurso;
-}
-
-// Función para transformar los datos de "anoCurso"
-function transformAnoCurso(anoCurso, links, asignaturas) {
-  return anoCurso.map((curso) => {
-
-    const { id, numero, descripcion, asignaturas: cursoAsignaturas } = curso;
-
-    const modifiedCurso = {
-      name: numero + ' ' + descripcion,
-      children: transformAsignaturas(cursoAsignaturas, links, asignaturas), // Llamamos a una función para transformar los datos de "asignaturas"
-      group: id,   
-      padre:true
-
-    };
- 
-    return modifiedCurso;
-  });
-}
-function obtenerNombrePorIdioma(obj) {
-;
-  // Verifica si obj tiene la propiedad 'info' y no está vacía
-  if (obj.info && obj.info.length > 0) {
-      // Busca el objeto info que corresponde al idioma seleccionado
-      const infoIdioma = obj.info.find(info => info.idioma === idiomaSeleccionado);
-
-      // Si se encuentra la información en el idioma seleccionado, devuelve su nombre
-      if (infoIdioma && infoIdioma.nombre) {
+  
+    const asignaturaIds = data2.flatMap(d => d.asignaturas.map(a => a.id));
+  
+    const links = data2.flatMap(d =>
+      d.asignaturas.flatMap(obj =>
+        obj.relaciones
+          .map(x => ({
+            source: x.id_asignatura1,
+            target: x.id_asignatura2,
+            value: x.descripcion
+          }))
+          .filter(link => asignaturaIds.includes(link.source) && asignaturaIds.includes(link.target))
+      )
+    );
+  
+    var asignaturas = data2.flatMap(d => d.asignaturas);
+  
+    function transformData(data, links, asignaturas) {
+      const { nombreCurso, universidadCurso, anoCurso } = data;
+  
+      const modifiedCurso = {
+        name: nombreCurso,
+        children: transformAnoCurso(anoCurso, links, asignaturas),
+      };
+  
+      return modifiedCurso;
+    }
+  
+    function transformAnoCurso(anoCurso, links, asignaturas) {
+      return anoCurso.map((curso) => {
+        const { id, numero, descripcion, asignaturas: cursoAsignaturas } = curso;
+        const modifiedCurso = {
+          name: numero + ' ' + descripcion,
+          children: transformAsignaturas(cursoAsignaturas, links, asignaturas),
+          group: id,
+          padre: true
+        };
+        return modifiedCurso;
+      });
+    }
+  
+    function obtenerNombrePorIdioma(obj) {
+      if (obj.info && obj.info.length > 0) {
+        const infoIdioma = obj.info.find(info => info.idioma === idiomaSeleccionado);
+        if (infoIdioma && infoIdioma.nombre) {
           return infoIdioma.sigla;
+        }
+        const primerIdioma = obj.info[0];
+        if (primerIdioma && primerIdioma.nombre) {
+          return primerIdioma.sigla;
+        }
       }
-
-      // Si no se encuentra el idioma seleccionado, devuelve el nombre en el primer idioma del array
-      const primerIdioma = obj.info[0];
-      if (primerIdioma && primerIdioma.nombre) {
-          return primerIdioma.nombre;
+      return obj.asignatura;
+    }
+  
+    function transformAsignaturas(asignaturas, links, asignaturasData) {
+      return asignaturas.map((asignaturaItem) => {
+        const { relaciones, id, asignatura, descripcion, cursoID } = asignaturaItem;
+        nombre = obtenerNombrePorIdioma(asignaturaItem)
+        const modifiedAsignatura = {
+          name: nombre,
+          descripción: descripcion,
+          id: id,
+          padre: true,
+          children: transformacionfromChildren(id, links, asignaturasData),
+          group: cursoID
+        };
+        return modifiedAsignatura;
+      });
+    }
+  
+    function transformacionfromChildren(id, links, asignaturasData) {
+      const asignaturasRelacionadas = [];
+      const asignaturasAgregadas = new Set();
+      const enlacesOrigen = links.filter((enlace) => enlace.source === id);
+      enlacesOrigen.forEach((enlace) => {
+        const { target, value } = enlace;
+        var clase = obtenerNombreAsignatura(target, asignaturasData);
+        const asignatura = { name: obtenerNombrePorIdioma(clase), value: 1, group: clase.cursoID, padre: true, children: transformacionfromChildren(clase.id, links, asignaturasData) };
+        if (!asignaturasAgregadas.has(asignatura.name)) {
+          asignaturasRelacionadas.push(asignatura);
+          asignaturasAgregadas.add(asignatura.name);
+        }
+      });
+      return asignaturasRelacionadas;
+    }
+  
+    function obtenerNombreAsignatura(asignaturaId, asignaturasData) {
+      const asignatura = asignaturasData.find((asignatura) => asignatura.id === asignaturaId);
+      if (asignatura) {
+        return asignatura;
+      } else {
+        return null;
       }
-  }
-
-  // Si obj.info está vacío o no se encuentra el idioma seleccionado ni el primer idioma, devuelve obj.nombre
-  return obj.asignatura;
-}
-
-
-// Función para transformar los datos de "asignaturas"
-function transformAsignaturas(asignaturas, links, asignaturasData) {
-  return asignaturas.map((asignaturaItem) => {
-
-    const { relaciones, id, asignatura, descripcion, cursoID } = asignaturaItem;
-
-nombre = obtenerNombrePorIdioma(asignaturaItem)
-
-
-    // Modificamos el nombre y eliminamos el atributo "relaciones" en "asignaturas"
-    const modifiedAsignatura = {
-      name: nombre,
-      descripción: descripcion,
-      id: id,
-      padre:true,
-      children: transformacionfromChildren(id, links, asignaturasData),
-      group :cursoID
+    }
+  
+    const data = transformData(aux, links, asignaturas);
+  
+    const partition = data => {
+      const assignValues = node => {
+        if (!node.children || node.children.length === 0) {
+          node.value = node.value || 1;
+        } else {
+          node.children.forEach(assignValues);
+        }
+      };
+      assignValues(data);
+  
+      const root = d3.hierarchy(data)
+        .sum(d => d.value)
+        .sort((a, b) => b.value - a.value);
+  
+      return d3.partition()
+        .size([2 * Math.PI, root.height + 1])
+        (root);
     };
-   
-    return modifiedAsignatura;
-  });
-}
-
-function transformacionfromChildren(id, links, asignaturasData) {
-  const asignaturasRelacionadas = [];
-  const asignaturasAgregadas = new Set(); // Conjunto para almacenar asignaturas únicas
-
-  // Buscar enlaces donde el ID de la asignatura es el origen (source)
-  const enlacesOrigen = links.filter((enlace) => enlace.source === id);
-  enlacesOrigen.forEach((enlace) => {
-    const { target, value } = enlace;
-    var clase = obtenerNombreAsignatura(target,asignaturasData);
   
-    const asignatura = { name: obtenerNombrePorIdioma(clase), value: 1,group: clase.cursoID, padre: true,children:transformacionfromChildren(clase.id, links, asignaturasData) };
-    
-    // Verificar si la asignatura ya ha sido agregada
-    if (!asignaturasAgregadas.has(asignatura.name)) {
-      asignaturasRelacionadas.push(asignatura);
-      asignaturasAgregadas.add(asignatura.name);
-    }
-  });
+    const arc = d3.arc()
+      .startAngle(d => Math.max(0, Math.min(2 * Math.PI, d.x0)))
+      .endAngle(d => Math.max(0, Math.min(2 * Math.PI, d.x1)))
+      .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+      .padRadius(radius * 1.5)
+      .innerRadius(d => d.y0 * radius)
+      .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
   
-   
-    
- 
+    const root = partition(data);
+    root.each(d => (d.current = d));
   
-  return asignaturasRelacionadas;
-}
+    const g = svg.append("g")
+      .attr("transform", `translate(${width / 2},${width / 2})`);
 
-
-function obtenerNombreAsignatura(asignaturaId, asignaturasData) {
-
-  const asignatura = asignaturasData.find((asignatura) => asignatura.id === asignaturaId);
+      const zoom = d3.zoom()
+    .scaleExtent([0.1, Math.min(width, height)])
+    .on('zoom', () => {
+      g.attr('transform', d3.event.transform); // Realiza el zoom y la reducción del tamaño
+      this.xAxis.call(this.xScale.scale(d3.event.transform.rescaleX(this.xScale)));
+      this.yAxis.call(this.yScale.scale(d3.event.transform.rescaleY(this.yScale)));
+    });
+      svg.call(zoom);
   
-  if (asignatura) {
-    return asignatura;
-  } else {
-    return null; // O cualquier valor predeterminado en caso de que el ID de la asignatura no exista
-  }
-}
-  // Aplicamos la transformación a tu dataset original
-  const data = transformData(aux,links, asignaturas);
-
-const partition = data => {
-  // Helper function to assign default value to leaf nodes
-  const assignValues = node => {
-    if (!node.children || node.children.length === 0) {
-      node.value = node.value || 1; // Assign a default value of 1 if no value is specified
-    } else {
-      node.children.forEach(assignValues); // Recursively assign values to children
-    }
-  };
-
-  // Assign values to nodes
-  assignValues(data);
-
-  const root = d3.hierarchy(data)
-    .sum(d => d.value)
-    .sort((a, b) => b.value - a.value);
-
-  return d3.partition()
-    .size([2 * Math.PI, root.height + 1])
-    (root);
-};
+   ;
   
-
-  const arc = d3.arc()
-  .startAngle(d => Math.max(0, Math.min(2 * Math.PI, d.x0)))
-  .endAngle(d => Math.max(0, Math.min(2 * Math.PI, d.x1)))
-  .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
-  .padRadius(radius * 1.5)
-  .innerRadius(d => d.y0 * radius)
-  .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
-
-
-
-  const root = partition(data);
+    const format = d3.format(",d");
   
-  root.each(d => (d.current = d));
-
-  const g = svg.append("g")
-  .attr("transform", `translate(${width / 2},${width / 2})`);
-  const format = d3.format(",d");
-
-
-const path = g.append("g")
-  .selectAll("path")
-  .data(root.descendants().slice(1))
-  .enter()
-  .append("path")
-  .attr("fill", d => {
-    
-    return color(d.data.group);
-  })
-  .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
-  .attr("d", d => arc(d.current))
-  .filter(d => d.data.padre)
-  .style("cursor", "pointer")
-  .on("click", clicked)
-  .each(function(d) {
-   
-    d3.select(this)
-      .transition()
-      .on("end", function() {
+    const path = g.append("g")
+      .selectAll("path")
+      .data(root.descendants().slice(1))
+      .enter()
+      .append("path")
+      .attr("fill", d => {
+        return color(d.data.group);
+      })
+      .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+      .attr("d", d => arc(d.current))
+      .filter(d => d.data.padre)
+      .style("cursor", "pointer")
+      .on("click", clicked)
+      .each(function (d) {
+        d3.select(this)
+          .transition()
+          .on("end", function () {
+            d3.select(this)
+              .append("title")
+              .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
+          });
+      });
+  
+    const label = g.append("g")
+      .attr("pointer-events", "none")
+      .attr("text-anchor", "middle")
+      .style("user-select", "none")
+      .selectAll("text")
+      .data(root.descendants().slice(1))
+      .enter()
+      .append("text")
+      .attr("dy", "0.35em")
+      .attr("fill-opacity", d => +labelVisible(d.current))
+      .attr("transform", d => labelTransform(d.current))
+      .attr("font-size", d => calculateFontSize(d))
+      .text(d => d.data.name)
+      .each(function (d) {
         d3.select(this)
           .append("title")
           .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
-      });
-  });
-
-
-
-
-const label = g.append("g")
-  .attr("pointer-events", "none")
-  .attr("text-anchor", "middle")
-  .style("user-select", "none")
-  .selectAll("text")
-  .data(root.descendants().slice(1))
-  .enter()
-  .append("text")
-  .attr("dy", "0.35em")
-  .attr("fill-opacity", d => +labelVisible(d.current))
-  .attr("transform", d => labelTransform(d.current))
-  .attr("font-size", d => calculateFontSize(d))
-  .text(d => d.data.name)
-  .each(function(d) {
-    d3.select(this)
-      .append("title")
-      .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
-  });
-
-const parent = g.append("circle")
-  .datum(root)
-  .attr("r", radius)
-  .attr("fill", "none")
-  .attr("pointer-events", "all")
-  .on("click", () => clicked(parent.datum()));
-  
-  function clicked(p) {
-   
-    parent.datum(p.parent || root);
-  
-    root.each(function (d) {
-      d.target = {
-        x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
-        x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
-        y0: Math.max(0, d.y0 - p.depth),
-        y1: Math.max(0, d.y1 - p.depth)
-      };
+      }) .on("mouseover", function(d) {
+        
+    })
+    .on("mouseout", function(d) {
+        
+    }).on("click",d => {
+      console.log(d)
+      //mostrarRelacion(d)
     });
   
-    const t = g.transition().duration(750);
+    const parent = g.append("circle")
+      .datum(root)
+      .attr("r", radius)
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+      .on("click", () => clicked(parent.datum()));
+  const parentText = g.append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.35em")
+      .text(root.data.name);
   
-    path.transition(t)
-      .tween("data", function (d) {
-        const interpolate = d3.interpolate(d.current, d.target);
-        return function (t) {
-          d.current = interpolate(t);
-        };
-      })
-      .filter(function (d) {
-        
-        return +this.getAttribute("fill-opacity") || arcVisible(d.target);
-      })
-      .attr("fill-opacity", function (d) {
-        return arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0;
-      })
-      .attrTween("d", function (d) {
-        return function () {
-          return arc(d.current);
+    function clicked(p) {
+    
+      parent.datum(p.parent || root);
+      parentText.text(p.data.name);
+  
+      root.each(function (d) {
+        d.target = {
+          x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+          x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+          y0: Math.max(0, d.y0 - p.depth),
+          y1: Math.max(0, d.y1 - p.depth)
         };
       });
+      const t = g.transition().duration(750);
   
-    
-
-      //actualiza los label
-      label.filter(function(d) {
-   
+      path.transition(t)
+        .tween("data", function (d) {
+          const interpolate = d3.interpolate(d.current, d.target);
+          return function (t) {
+            d.current = interpolate(t);
+          };
+        })
+        .filter(function (d) {
+          return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+        })
+        .attr("fill-opacity", function (d) {
+          return arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0;
+        })
+        .attrTween("d", function (d) {
+          return function () {
+            return arc(d.current);
+          };
+        });
+  
+      label.filter(function (d) {
         return this.getAttribute("fill-opacity") || labelVisible(d.target);
       }).transition(t)
         .attr("fill-opacity", d => +labelVisible(d.target))
         .attrTween("transform", d => () => labelTransform(d.current));
-  }
-
-
-function arcVisible(d) {
-  return d && d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-}
-
-function labelVisible(d) {
-
-  return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
-}
-
-function labelTransform(d) {
-
-  const x = ((d.x0 + d.x1) / 2) * (180 / Math.PI);
-  const y = ((d.y0 + d.y1) / 2) * radius;
+    }
   
-
-  return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-
-}
-
-
-function calculateFontSize(d) {
-  const area = (d.x1 - d.x0) * (d.y1 - d.y0); // Calcula el área del rectángulo
-
-  // Define las reglas para ajustar el tamaño de la fuente en función del área
-  if (area < 10) {
-    return "10px";
-  } else if (area < 100) {
-    return "10px";
-  } else {
-    return "12px";
+    function arcVisible(d) {
+      return d && d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+    }
+  
+    function labelVisible(d) {
+      return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+    }
+  
+    function labelTransform(d) {
+      const x = ((d.x0 + d.x1) / 2) * (180 / Math.PI);
+      const y = ((d.y0 + d.y1) / 2) * radius;
+      return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+    }
+  
+    function calculateFontSize(d) {
+      const area = (d.x1 - d.x0) * (d.y1 - d.y0);
+      if (area < 10) {
+        return "10px";
+      } else if (area < 100) {
+        return "10px";
+      } else {
+        return "12px";
+      }
+    }
   }
-}
-
-
-
-}
+  
 
 
 
@@ -1775,9 +1568,6 @@ data = aux.anoCurso
   svg.selectAll('.group-node').remove();
 
   //
-
- 
-
   var groupNodes = [];
   var groupIndex = 0;
   var numGroups = data.length;
@@ -1828,38 +1618,31 @@ function obtenerNombrePorIdioma(obj) {
 }
 
 var nodes = [];
-
-
-  asignaturas = data.flatMap(d => d.asignaturas.map(a => obtenerNombrePorIdioma(a)));
-
-
-   function obtenersSiglaPorIdioma(obj) {
-    
+asignaturas = data.flatMap(d => d.asignaturas.map(a => obtenerNombrePorIdioma(a)));
+function obtenersSiglaPorIdioma(obj) {
         // Verifica si obj tiene la propiedad 'info' y no está vacía
         if (obj.info && obj.info.length > 0) {
             // Busca el objeto info que corresponde al idioma seleccionado
             const infoIdioma = obj.info.find(info => info.idioma === idiomaSeleccionado);
-      
             // Si se encuentra la información en el idioma seleccionado, devuelve su nombre
             if (infoIdioma && infoIdioma.nombre) {
                 return infoIdioma.sigla;
             }
-      
             // Si no se encuentra el idioma seleccionado, devuelve el nombre en el primer idioma del array
             const primerIdioma = obj.info[0];
             if (primerIdioma && primerIdioma.nombre) {
                 return primerIdioma.sigla;
             }
         }
-      
         // Si obj.info está vacío o no se encuentra el idioma seleccionado ni el primer idioma, devuelve obj.nombre
         return obj.asignatura;
       }
 
-   nodes = data.flatMap(d => d.asignaturas.map(obj => ({
+    nodes = data.flatMap(d => d.asignaturas.map(obj => ({
     id: obj.id,
     nombre: obtenerNombrePorIdioma(obj),
     sigla: obtenersSiglaPorIdioma(obj),
+    url: obj.url,
     semestre: obj.semestre,
     descripcion: obj.descripcion,
     sourceLinks: [],
@@ -1875,12 +1658,15 @@ var nodes = [];
     obj.relaciones.map(x => ({
       source: nodeById.get(x.id_asignatura1),
       target: nodeById.get(x.id_asignatura2),
+      color: x.color,
       value: x.descripcion
     }))
   ));
 
 // Crea un conjunto de datos de relaciones basadas en etiquetas en común
 const relaciones = [];
+/*
+
 
 for (let i = 0; i < nodes.length; i++) {
   for (let j = i + 1; j < nodes.length; j++) {
@@ -1894,6 +1680,7 @@ for (let i = 0; i < nodes.length; i++) {
   }
 }
   
+*/
  const links = allLinks.filter((link) => link.target !== undefined);
   
   
@@ -1953,8 +1740,8 @@ var allinks = links.concat(groupLinks).concat(relaciones);
 
   
     const simulation = d3.forceSimulation(graph.allnodes)
-    .force("link", d3.forceLink(groupLinks).id(d => d.id).distance(180))
-    .force("charge", d3.forceManyBody().strength(-50)).force("center", d3.forceCenter(width / 2, height / 2));
+    .force("link", d3.forceLink(groupLinks).id(d => d.id).distance(10))
+    .force("charge", d3.forceManyBody().strength(-30)).force("center", d3.forceCenter(width / 2, height / 2));
 
 
 
@@ -1972,19 +1759,68 @@ function getLineLength(d) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
+
     var link = container.selectAll(".link")
     .data(graph.allinks)
     .enter()
     .append("line")
     .attr("class", "link")
-    .attr("stroke", "#aaa")
+    .attr("stroke", "#aaa")  .attr("stroke-width", 12)
     .attr("stroke-width", function(d) {
+
       // Utilizar el campo 'nivel' para asignar el grosor de línea
-      return d.color *9 + 0.5; // Puedes ajustar el valor multiplicador según tus preferencias
-    }) .attr("marker-end", d => `url(#arrow-${d.source.group}-${d.target.group}) `);
+
+      return Number(d.color)+1* 1.5; // Puedes ajustar el valor multiplicador según tus preferencias
+    }) .on("mouseover", function(d) {
+  
+      d3.select(this).attr("stroke", "red").attr("stroke-width", function(d) {
+          return (Number(d.color) + 1) * 4; // Aumenta el grosor para resaltar
+      });
+  })
+  .on("mouseout", function(d) {
+      d3.select(this).attr("stroke", "#aaa").attr("stroke-width", function(d) {
+          return (Number(d.color) + 1) * 1.5; // Vuelve al grosor original
+      })
+  }).on("click",d => {
+   
+    mostrarRelacion(d)
+  }).attr("marker-end", d => `url(#arrow-${d.source.group}-${d.target.group})`).style("stroke", "#aaa").attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) {
+      var dx = d.target.x - d.source.x;
+      var dy = d.target.y - d.source.y;
+      var length = Math.sqrt(dx * dx + dy * dy);
+      var offset = 15; // Ajusta este valor según el tamaño de tu nodo
+      return d.target.x - (dx / length) * offset;
+    })
+    .attr("y2", function(d) {
+      var dx = d.target.x - d.source.x;
+      var dy = d.target.y - d.source.y;
+      var length = Math.sqrt(dx * dx + dy * dy);
+      var offset = 15; // Ajusta este valor según el tamaño de tu nodo
+      return d.target.y - (dy / length) * offset;
+    });
+   ;
 
    
-
+   data.forEach(d => {
+    d.asignaturas.forEach(a => {
+      a.relaciones.forEach(r => {
+        // Crear el marcador con un identificador único
+        svg.append("defs").append("marker")
+          .attr("id", `arrow-${r.id_asignatura1}-${r.id_asignatura2}`)
+          .attr("viewBox", "0 -5 10 10")
+          .attr("refX", 5)
+          .attr("refY", 0)
+          .attr("markerWidth", 30) // Ajusta este valor para cambiar el tamaño de la flecha
+          .attr("markerHeight", 30) // Ajusta este valor para cambiar el tamaño de la flecha
+          .attr("orient", "auto")
+          .append("path")
+          .attr("d", "M0,-5L10,0L0,5")
+          .attr("fill", "#000");
+      });
+    });
+  });
 
   
   var groupNode = container.selectAll(".group-node")
@@ -1992,8 +1828,8 @@ function getLineLength(d) {
     .enter()
     .append("rect")
     .attr("class", "group-node")
-    .attr("width", 20)
-    .attr("height", 20)
+    .attr("width", 15)
+    .attr("height", 15)
     .attr("fill", d => color(d.group)).call(drag(simulation));
 
     
@@ -2006,76 +1842,70 @@ function getLineLength(d) {
     .text(d => d.nombre);
 
     svg.selectAll('.group-node').remove();
-
     var node = container.selectAll(".node")
     .data(graph.allnodes.filter(d => !d.isGroup)) // Filtra los nodos individuales
     .enter().append("g")
-    .append("circle") .attr("r", 5)
-    .attr("class", "node").on("mouseover", function(d) {
-                          //svg.classed("hover", true);
-
-                
-                      d3.select(this).attr("r", 30);
-
-                          const targetNamesSet = new Set(d.sourceLinks.map(link => link.target.nombre));
-
-                    // Agregar los nombres de los sources en targetLinks al conjunto.
-                    d.targetLinks.forEach(link => targetNamesSet.add(link.source.nombre));
-
-                    // Convertir el conjunto de nombres únicos en un array.
-                    const nombreslinks = Array.from(targetNamesSet);
-
-
-                    d3.selectAll("line"); // Esto es solo un ejemplo, ajusta la selección según tu estructura de datos.
-
-                    // Ahora, puedes seleccionar y cambiar el color de los enlaces que coincidan con 'obj.nombre'.
-                    link.style("stroke", function(link) {
-                      if (link.source.nombre === d.nombre || link.target.nombre === d.nombre) {
-                        return "black"; // Cambia el color de los enlaces que coinciden con 'obj.nombre' a negro.
-                      } else {
-                        return "#f0f0f0"; // Cambia el color de los demás enlaces a gris (u otro color deseado).
-                      }
-                    });
-
-
-
-
-                          for (const textEl of labels._groups[0]) {
-
-                            
-                            if(nombreslinks.includes(textEl.textContent)){
-
-                                d3.select(textEl).style("font-weight", "bold") .style("font-size", "22px");
-                            }else  if (textEl.textContent == d.nombre) {
-
-                              d3.select(textEl).style("font-weight", "bold") .style("font-size", "31px");
-                              // Cambia "new-class" por la clase que deseas aplicar
-                            } else{
-                              d3.select(textEl)
-                      .style("color", "#ccc") // Cambia el color del texto a gris claro
-                      .style("opacity", "0.4");
-                            }
-                          }
-        
-
-                        // label.classed("primary", n => n === d);
-                          //label.classed("secondary", n => n.sourceLinks.some(l => l.target === d) || n.targetLinks.some(l => l.source === d));
-                        // path.classed("primary", l => l.source === d || l.target === d).filter(".primary").raise();
-
-     
+    .append("circle") .attr("r", 15)
+    .attr("class", "node")  .on("mouseover", function(d) {
+      d3.select(this).attr("r", 20);
+  
+      const relatedNodes = new Set();
+      const targetNamesSet = new Set(d.sourceLinks.map(link => link.target.nombre));
+      d.sourceLinks.forEach(link => {
+        relatedNodes.add(link.target);
+      });
+      d.targetLinks.forEach(link => {
+        relatedNodes.add(link.source);
+      });
+      d.targetLinks.forEach(link => targetNamesSet.add(link.source.nombre));
+      const nombreslinks = Array.from(targetNamesSet);
+  
+      link.style("stroke", function(link) {
+        if (link.source.nombre === d.nombre || link.target.nombre === d.nombre) {
+          return "black";
+        } else {
+          return "#f0f0f0";
+        }
+      });
+  
+      for (const textEl of labels._groups[0]) {
+        if (nombreslinks.includes(textEl.textContent)) {
+          d3.select(textEl).style("font-weight", "bold").style("font-size", "22px");
+        } else if (textEl.textContent == d.nombre) {
+          d3.select(textEl).style("font-weight", "bold").style("font-size", "31px");
+        } else {
+          d3.select(textEl).style("color", "#ccc").style("opacity", "0.4");
+        }
+      }
+  
+      // Animar los nodos relacionados
+      relatedNodes.forEach(node => {
+        d3.select(node).transition().duration(2000)
+          .attr("cx", d.x)
+          .attr("cy", d.y);
+      });
+  
+      // Animar los enlaces relacionados
+      d.sourceLinks.forEach(link => {
+        d3.select(link).transition().duration(2000)
+          .attr("x1", d.x)
+          .attr("y1", d.y);
+      });
+      d.targetLinks.forEach(link => {
+        d3.select(link).transition().duration(2000)
+          .attr("x2", d.x)
+          .attr("y2", d.y);
+      });
     }).on("mouseout", d => {
         for (const textEl of labels._groups[0]) {
           d3.select(textEl).style("font-weight", "normal") .style("font-size", "14px").style("color", "black").style("opacity", "0.8");
-      
       }
-
-   
         container.selectAll(".node").attr("r", 15);
-
         link.style("stroke", "#aaa")
-       .attr("stroke-width", 2);
+     
     }).on("click", d =>{
-    
+
+    console.log(d,data)
       mostrarGrafico(d,data);
       
    
@@ -2085,25 +1915,36 @@ function getLineLength(d) {
 
 
 
-  simulation.on("tick", () => {
-    link
+    simulation.on("tick", () => {
+      link
         .attr("x1", d => d.source.x)
         .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-
-    node
+        .attr("x2", function(d) {
+          var dx = d.target.x - d.source.x;
+          var dy = d.target.y - d.source.y;
+          var length = Math.sqrt(dx * dx + dy * dy);
+          var offset = 15; // Ajusta este valor según el tamaño de tu nodo
+          return d.target.x - (dx / length) * offset;
+        })
+        .attr("y2", function(d) {
+          var dx = d.target.x - d.source.x;
+          var dy = d.target.y - d.source.y;
+          var length = Math.sqrt(dx * dx + dy * dy);
+          var offset = 15; // Ajusta este valor según el tamaño de tu nodo
+          return d.target.y - (dy / length) * offset;
+        });
+    
+      node
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
-        
-   groupNode.attr("x", d => d.x -10 ) // Ajusta la posición x del cuadrado
-        .attr("y", d => d.y -10 ); // Ajusta la posición y del cuadrado
-
-
-    labels.attr("x", d => d.x + 28)
-      .attr("y", d => d.y + 5);
-         
-  });
+    
+      groupNode.attr("x", d => d.x - 10) // Ajusta la posición x del cuadrado
+        .attr("y", d => d.y - 10); // Ajusta la posición y del cuadrado
+    
+      labels.attr("x", d => d.x + 28)
+        .attr("y", d => d.y + 5);
+    });
+    
 
 
     
@@ -2142,6 +1983,7 @@ function getLineLength(d) {
       d.fy = null;
     }
   }
+
 }
 
 
@@ -2282,6 +2124,12 @@ function encontrarTagsComunes(tagsA, tagsB) {
         const jsonString = tag;
         tagCheckbox.value = tag;
         tagCheckbox.classList.add("tag");
+       
+         // Preseleccionar el checkbox si está en tagsSeleccionados
+         if (tagsSeleccionados.includes(tag)) {
+
+          tagCheckbox.checked = true;
+      }
     
         // Crear un elemento de etiqueta (label)
         const label = document.createElement("label");
@@ -2306,6 +2154,8 @@ const checkboxes = document.querySelectorAll(".tag");
 
 // Escuchar el evento clic en el elemento "todos"
 checkboxTodos.addEventListener("click", function() {
+
+ 
   if (checkboxTodos.checked) {
     // Si "todos" está marcado, desmarca los demás elementos
     tagsFiltro= ["-1"];
@@ -2319,6 +2169,12 @@ checkboxTodos.addEventListener("click", function() {
 // Escuchar el evento clic en los elementos de etiqueta
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener("click", function() {
+     if (checkbox.checked) {
+ 
+    tagsSeleccionados.push(checkbox.value);
+  } else {
+    tagsSeleccionados = tagsSeleccionados.filter(tag => tag !== checkbox.value);
+  }
     // Si se marca un elemento de etiqueta, desmarca "todos"
     checkboxTodos.checked = false;
   });
@@ -2370,11 +2226,38 @@ checkboxes.forEach((checkbox) => {
                       tagsFiltro.push(checkbox.value);
                     }
                 });
+                if(tagsSeleccionados.length > 0 ){
+const filteredData = JSON.parse(JSON.stringify(data));
+ aux = { ...res };
+                if (Array.isArray(filteredData)) {
+                    aux.anoCurso.forEach(ano => {
+                                  if (Array.isArray(ano.asignaturas)) {
+                            ano.asignaturas = ano.asignaturas.filter(asignatura => {
+                                let hasFilteredTag = false;
+                                for (let tag of asignatura.tags) {
+                                    if (tagsFiltro.includes(tag.descripcion)) {
+                                        hasFilteredTag = true;
+                                        break;
+                                    }
+                                }
+                                if (!hasFilteredTag) {
+                                             }
+                                return hasFilteredTag;
+                            });
+                        }
+                              });
+                } else {
                 
-    
- 
-    InicializarGrafo(res)  
-                setTimeout(() => {
+                }
+                
+                // Imprimir el resultado final
+              InicializarGrafo(aux)  
+              
+                 }else{
+               
+               location.reload();
+              }
+                  setTimeout(() => {
                     modal.remove();
                 }, 150);
             }
@@ -2454,7 +2337,8 @@ checkboxes.forEach((checkbox) => {
       const nodes = data.anoCurso.flatMap(d => d.asignaturas.map(obj => ({
         id: obj.id,
         nombre: obtenerNombrePorIdioma(obj),
-        sigla:obtenerNombrePorIdioma ,
+        sigla:  obtenerNombrePorIdioma ,
+        url: obj.url,
         semestre: obj.semestre,
         sourceLinks: [],
         targetLinks: [],
@@ -2599,8 +2483,7 @@ checkboxes.forEach((checkbox) => {
         .attr("stroke", d => d.source.group === d.target.group ? color(d.source.group) : color(d.target.group))
         .attr("d", arc)
         .attr("transform", `translate(${dx - margin.left},0)`)
-        .attr("marker-start","url(#arrow)")  
-        .attr("marker-mid","url(#arrow)")  
+
       
         ;
       
