@@ -1,0 +1,92 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.modalTags {
+    position: absolute;
+    background-color: rgb( 0 0 0 / .8);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .formulario {
+        width: 50%;
+    height: 80%;
+    
+        padding: 2rem;
+        margin: 0 auto; /* Esto centrará horizontalmente el formulario */
+        position: absolute;
+        background-color: v.$blanco;
+        top: 50%; /* Lo posiciona verticalmente en el centro */
+        left: 50%; /* Lo posiciona horizontalmente en el centro */
+        transform: translate(-50%, -50%); /* Lo ajusta para que esté completamente centrado */
+        transition-property: all;
+        transition-duration: 500ms;
+        transition-timing-function: ease-in-out;
+        opacity: 1; /* Cambié la opacidad a 1 para que sea visible */
+        border-radius: 1rem;
+
+        dl {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: left;
+           
+           
+          }
+        
+
+        dt, input {
+            flex-basis: calc(50% - 10px);
+            padding: 5px;
+            margin: 0;
+            box-sizing: border-box;
+          }
+
+        legend {
+            font-size: 2rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            display: block;
+        }
+        input[type="text"] {
+            border: 1px solid v.$gris;
+            border-radius: .5rem;
+        }
+        .opciones {
+            display: flex;
+            justify-content: space-between;
+        }
+        .submit-nueva-tarea {
+            @include m.boton(v.$indigo, v.$blanco);
+        }
+        .cerrar-modal {
+            @include m.boton(v.$naranja, v.$blanco);
+        }
+
+        &.animar {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 1;
+        }
+        &.cerrar {
+            transform: translateY(-200%);
+            opacity: 0;
+        }
+
+        #listaTagsModal {
+            max-height: 260px; /* Altura máxima para acotar la lista */
+            overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
+            border: 1px solid #ccc; /* Borde para el contenedor */
+            padding: 10px; /* Espaciado interno para el contenido de la lista */
+            background-color: #f7f7f7; /* Color de fondo */
+            border-radius: 5px; /* Bordes redondeados */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para un aspecto elevado */
+        }
+        .filtro{
+            display: none;
+        }
+    }
+}

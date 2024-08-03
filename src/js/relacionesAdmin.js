@@ -5,20 +5,35 @@ let asignatura = [];
 let asignaturas =[];
 let idiomaSeleccionado ="es";
 let filtro ="-1";
+<<<<<<< HEAD
 console.log(curso)
 console.log(asi)
 
+=======
+
+let isFirstExecution = true;
+
+ 
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 const selectLanguage = document.getElementById('language-select');
 
 // Agrega un evento para cambiar el idioma al seleccionar una opción
 selectLanguage.addEventListener('change', function () {
     const selectedLanguage = this.value; // Obtén el idioma seleccionado
+<<<<<<< HEAD
     
+=======
+    isFirstExecution = false;
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     // Llama a la función para cambiar el idioma
     idiomaSeleccionado= selectedLanguage
     filtrarAsignaturas(filtro);
 }); 
+<<<<<<< HEAD
 console.log('1')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 /*
 async function ObtenerAsignaturas() {
     try {
@@ -46,12 +61,19 @@ const cursosInputHidden = document.getElementById("contenido");
 const accordionButton = document.querySelector('.accordion-button');
 const accordionContent = document.querySelector('.accordion-content');
 
+<<<<<<< HEAD
 const boton = document.getElementById("infoEditButton");
 
   boton.addEventListener("click", panelInfo);
 console.log(accordionButton);
 
 console.log('2')
+=======
+//const boton = document.getElementById("infoEditButton");
+
+// boton.addEventListener("click", panelInfo);
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 // Agregar un evento clic al botón del acordeón
 accordionButton.addEventListener('click', function () {
 // Alternar la visibilidad del contenido del acordeón
@@ -62,7 +84,11 @@ if (accordionContent.style.display === 'block') {
 }
 });
 
+<<<<<<< HEAD
 console.log('3')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 /*
 modal.addEventListener('click', function(e) {
    e.preventDefault();
@@ -115,13 +141,18 @@ function expandirCelda(button) {
     
 }
 function mostrarAlerta(mensaje, tipo, referencia) {
+<<<<<<< HEAD
     console.log('1')
+=======
+ 
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     // Previene la creación de multiples alertas
     const alertaPrevia = document.querySelector('.alerta');
     if(alertaPrevia) {
         alertaPrevia.remove();
     }
 
+<<<<<<< HEAD
     console.log('2')
     const alerta = document.createElement('DIV');
     alerta.classList.add('alerta', tipo);
@@ -130,6 +161,16 @@ function mostrarAlerta(mensaje, tipo, referencia) {
     // Inserta la alerta antes del legend
     referencia.parentElement.insertBefore(alerta, referencia.nextElementSibling);
     console.log('4')
+=======
+    
+    const alerta = document.createElement('DIV');
+    alerta.classList.add('alerta', tipo);
+    alerta.textContent = mensaje;
+   
+    // Inserta la alerta antes del legend
+    referencia.parentElement.insertBefore(alerta, referencia.nextElementSibling);
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     // Eliminar la alerta después de 5 segundos
     setTimeout(() => {
         alerta.remove();
@@ -210,7 +251,11 @@ function panelInfo( editar = false, asignatura = {}) {
         formulario.classList.add('animar');
     }, 0);
 
+<<<<<<< HEAD
     console.log(modal)
+=======
+   
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
 
 
@@ -330,7 +375,11 @@ function panelInfo( editar = false, asignatura = {}) {
             
             const resultado = await respuesta.json();
     
+<<<<<<< HEAD
             console.log(resultado);
+=======
+        
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
             if(resultado.tipo === 'exito') {
                 Swal.fire(
@@ -370,10 +419,17 @@ function panelInfo( editar = false, asignatura = {}) {
     function guardarTag(e) {  
 
         if(e.keyCode === 44) {
+<<<<<<< HEAD
             console.log('heloy , 1 ');
             const cursosInputHidden = document.getElementById("idiomas");        
             value = cursosInputHidden.value
             console.log('heloy , 2 ');
+=======
+         
+            const cursosInputHidden = document.getElementById("idiomas");        
+            value = cursosInputHidden.value
+            
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             e.preventDefault();
             if(e.target.value.trim() === '' || e.target.value < 1) { 
                 return
@@ -424,6 +480,7 @@ function panelInfo( editar = false, asignatura = {}) {
         }
 
 
+<<<<<<< HEAD
         console.log('4')
         document.addEventListener("DOMContentLoaded", function () {
             var botonGuardar = document.getElementById("editarDescripcion");
@@ -436,46 +493,92 @@ function panelInfo( editar = false, asignatura = {}) {
                 actualizarGuia('descripcion',textarea.value);
             });
             console.log('2');
+=======
+       
+        document.addEventListener("DOMContentLoaded", function () {
+            var botonGuardar = document.getElementById("editarDescripcion");
+            var textarea = document.getElementById("guiadocente");
+          
+    
+            botonGuardar.addEventListener("click", function () {
+         
+                // Obtener el nuevo valor del textarea (puedes modificarlo según tus necesidades)
+                actualizarGuia('descripcion',textarea.value);
+            });
+         
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             var botonGuardar = document.getElementById("editarCompetencias");
             var textarea = document.getElementById("competencias");
     
             botonGuardar.addEventListener("click", function () {
+<<<<<<< HEAD
                 console.log('pasa',textarea.value)
                 // Obtener el nuevo valor del textarea (puedes modificarlo según tus necesidades)
                 actualizarGuia('competencia',textarea.value);
             });
             console.log('3');
+=======
+             
+                // Obtener el nuevo valor del textarea (puedes modificarlo según tus necesidades)
+                actualizarGuia('competencia',textarea.value);
+            });
+         
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             var botonGuardar = document.getElementById("editarContenidos");
             var textarea = document.getElementById("contenidos");
     
             botonGuardar.addEventListener("click", function () {
+<<<<<<< HEAD
                 console.log('pasa',textarea.value)
+=======
+               
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 // Obtener el nuevo valor del textarea (puedes modificarlo según tus necesidades)
                 actualizarGuia('temario',textarea.value);
             });
 
+<<<<<<< HEAD
             console.log('4');
+=======
+          
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             var botonGuardar = document.getElementById("editarEvaluacion");
             var textarea = document.getElementById("sistema");
     
             botonGuardar.addEventListener("click", function () {
+<<<<<<< HEAD
                 console.log('pasa',textarea.value)
+=======
+               
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 // Obtener el nuevo valor del textarea (puedes modificarlo según tus necesidades)
                 actualizarGuia('evaluacion',textarea.value);
             });
 
+<<<<<<< HEAD
             console.log('5');
+=======
+            
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             var botonGuardar = document.getElementById("editarConvocatoria");
             var textarea = document.getElementById("convocatoria");
     
             botonGuardar.addEventListener("click", function () {
+<<<<<<< HEAD
                 console.log('pasa',textarea.value)
+=======
+                
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 // Obtener el nuevo valor del textarea (puedes modificarlo según tus necesidades)
                 actualizarGuia('convocatoria',textarea.value);
             });
         });
         async function actualizarGuia(nombre,des) {
+<<<<<<< HEAD
             console.log('pasa',asi.id)
+=======
+           
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             const id = asi.id;
             const campo = nombre;
             const datos = new FormData();
@@ -483,7 +586,11 @@ function panelInfo( editar = false, asignatura = {}) {
             datos.append('id', asi.id);
             datos.append(nombre, des);
             datos.append('nombre', nombre);
+<<<<<<< HEAD
             console.log('pasa',datos)
+=======
+           
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             
         
             try {
@@ -493,12 +600,20 @@ function panelInfo( editar = false, asignatura = {}) {
                     body: datos
                 });
 
+<<<<<<< HEAD
                 console.log('pasa',datos)
+=======
+          
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             
                 
                 const resultado = await respuesta.json();
         
+<<<<<<< HEAD
                 console.log(resultado);
+=======
+               
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     
                 if(resultado.tipo === 'exito') {
                     Swal.fire(
@@ -560,9 +675,15 @@ function panelInfo( editar = false, asignatura = {}) {
 
         async function filtrarAsignaturas(e) {
             const filtro = e;
+<<<<<<< HEAD
             console.log('filtro chupi',e)
             const asignatura = obtenerAsignatura();
 
+=======
+   
+            const asignatura = obtenerAsignatura();
+       
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 const proyectoParams = new URLSearchParams(window.location.search);
                 const proyecto = Object.fromEntries(proyectoParams.entries());
                 proyecto.id;
@@ -572,8 +693,19 @@ function panelInfo( editar = false, asignatura = {}) {
             const respuesta = await fetch(url);
             const resultado = await respuesta.json();
             asignaturas = resultado.resultado;
+<<<<<<< HEAD
            
             visualizarAsignatuas(asignaturas,resultado.anos);
+=======
+
+            
+           asignaturaActual = resultado.actualasignatura;
+          
+
+           curso = resultado.curso
+     
+            visualizarAsignatuas(asignaturas,resultado.anos,asignaturaActual,curso);
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
          //  document.getElementById("mySavedModel").value = resultado.resultado;
            // console.log(resultado.resultado);
@@ -581,7 +713,19 @@ function panelInfo( editar = false, asignatura = {}) {
     
          
         }
+<<<<<<< HEAD
         function visualizarAsignatuas (asignaturas,anos){
+=======
+        function visualizarAsignatuas (asignaturas,anos,asignaturaActual,curso){
+            if (isFirstExecution) {
+        
+                
+                titulo = document.getElementById('titulo').textContent;
+                document.getElementById('titulo').textContent = titulo + ' ' + obtenerNombrePorIdioma(asignaturaActual);
+                
+                isFirstExecution = false;
+            }
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             // Obtener una referencia al elemento de la tabla en el DOM
 var tabla = document.querySelector('.relaciones-tabla');
 while (tabla.rows.length > 0) {
@@ -590,7 +734,11 @@ while (tabla.rows.length > 0) {
   
 // Crear la fila de encabezado
 var encabezado = tabla.insertRow();
+<<<<<<< HEAD
 var encabezadoColumnas = ['Asignatura Relacionada', 'Curso', 'Nivel de Relevancia', 'Inf'];
+=======
+var encabezadoColumnas = ['Asignatura Relacionada', 'Curso', 'Nivel de Relevancia', 'Inf','Eliminar'];
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
 
 for (var i = 0; i < encabezadoColumnas.length; i++) {
@@ -603,8 +751,36 @@ for (var i = 0; i < encabezadoColumnas.length; i++) {
 
 // Rellenar la tabla con datos de asignaturas
 for (var i = 0; i < asignaturas.length; i++) {
+<<<<<<< HEAD
     var fila = tabla.insertRow();
     var datosAsignatura = [obtenerNombrePorIdioma(asignaturas[i]), "", asignaturas[i].asignatura, asignaturas[i].asignatura];
+=======
+    if(asignaturas[i].id != asignaturaActual.id){
+
+  
+    var fila = tabla.insertRow();
+   
+    var relevanciaTexto = '';
+    if (asignaturas[i].relaciones && asignaturas[i].relaciones.length > 0) {
+        var color = parseInt(asignaturas[i].relaciones[0].color, 10);
+     
+   
+
+        switch (color) {
+            case 2:
+                relevanciaTexto = 'Relevancia Fuerte';
+                break;
+            case 1:
+                relevanciaTexto = 'Relevancia Moderada';
+                break;
+            case 0:
+                relevanciaTexto = 'Relevancia Ligera';
+                break;
+           
+        }
+}
+    var datosAsignatura = [obtenerNombrePorIdioma(asignaturas[i]), "",relevanciaTexto, asignaturas[i].url];
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     var asignaturaID = asignaturas[i].id; // Guarda el ID de la asignatura
 
     for (var j = 0; j < anos.length; j++) {
@@ -621,14 +797,53 @@ for (var i = 0; i < asignaturas.length; i++) {
         fila.setAttribute('data-asignatura-id', asignaturaID);
     }
     if (asignaturas[i].tiene_relacion == 1) {
+<<<<<<< HEAD
         fila.classList.add('verde');
     }
 }
+=======
+        
+        fila.classList.add('verde');
+            var celdaEliminar = fila.insertCell();
+            var botonEliminar = document.createElement('button');
+            botonEliminar.textContent = 'Eliminar';
+           // Capturar el contexto correcto utilizando una IIFE (Immediately Invoked Function Expression)
+           (function(asignatura) {
+            botonEliminar.onclick = function() {
+                event.stopPropagation();
+                eliminarRelacionMensaje(asignatura.relaciones[0]);
+                // Aquí puedes añadir lógica adicional para actualizar la tabla o hacer una solicitud AJAX para eliminar la relación en el servidor
+            };
+        })(asignaturas[i]);
+            celdaEliminar.appendChild(botonEliminar);
+    }
+}
+}
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 var filas = tabla.getElementsByTagName("tr");
 
 // Agrega un evento de clic a cada fila
 for (var i = 1; i < filas.length; i++) {
+<<<<<<< HEAD
   filas[i].addEventListener("click", function() {
+=======
+ 
+
+// Acceder a la segunda celda de la fila
+var segundaCelda = filas[i].cells[1];
+
+// Obtener el contenido de la celda
+var contenidoCelda = segundaCelda.textContent;
+
+// Extraer el número del contenido de la celda
+ numero = contenidoCelda.match(/\d+/)[0];
+
+ if (numero >= curso.numero) {
+   
+
+  filas[i].addEventListener("click", function() {
+ 
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     // Cambia el estilo de fondo de la fila seleccionada
     this.classList.toggle("seleccionada");
     var filaID = this.getAttribute('data-asignatura-id');
@@ -636,6 +851,11 @@ for (var i = 1; i < filas.length; i++) {
     editarRelacion(idAsignatura,filaID);
     
   });
+<<<<<<< HEAD
+=======
+}
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
   filas[i].addEventListener("mouseover", function() {
     // Cambia el estilo de fondo cuando el ratón entra en la fila
@@ -650,6 +870,7 @@ for (var i = 1; i < filas.length; i++) {
         }
 
 
+<<<<<<< HEAD
 
 
 
@@ -663,6 +884,91 @@ for (var i = 1; i < filas.length; i++) {
 
             asignatura1 = resultado.respuesta.asignatura1;
             console.log('quiero ver',asignatura1);
+=======
+        function eliminarRelacionMensaje(relacionEliminar) {
+            console.log()
+            console.log('heyy')
+            console.log(relacionEliminar)
+            
+         
+            Swal.fire({
+                title: '¿Estás seguro de que deseas eliminar la relación? ',
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log('Confirmación de eliminación recibida');
+                    eliminarRelacion(relacionEliminar);
+                }
+            });
+            
+        }
+        async function eliminarRelacion(relacion) {
+            console.log('Iniciando eliminación del curso con ID:');
+            console.log(relacion.id);
+        
+            const datos = new FormData();
+            datos.append('id', relacion.id);
+            console.log('datos', datos);
+        
+            try {
+                const url = 'http://localhost/UpTask_MVC/public/index.php/api/eliminarRelacion';
+                const respuesta = await fetch(url, {
+                    method: 'POST',
+                    body: datos
+                });
+        
+                // Verificar si la respuesta es exitosa
+                if (!respuesta.ok) {
+                    throw new Error('Error en la solicitud: ' + respuesta.statusText);
+                }
+        
+                const resultado = await respuesta.json();
+             console.log(resultado)
+             if (resultado.tipo === 'Exito') {
+                console.log('pasaaaaaaa');
+                console.log('Relación eliminada correctamente');
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'La relación ha sido eliminada correctamente',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload(); // Recargar la página
+                    }
+                }); } else {
+                    throw new Error('Error en el servidor: ' + resultado.mensaje);
+                }
+            } catch (error) {
+                console.error( error);
+                Swal.fire('Error', 'Hubo un problema al eliminar la relación: ' + error.message, 'error');
+            }
+        }
+        
+
+        async function  editarRelacion(id1,id2) {
+           
+            const url = `http://localhost/UpTask_MVC/public/index.php/api/asignaturasRelacion?id1=${id1}&id2=${id2}`;
+            const respuesta = await fetch(url);
+            const resultado = await respuesta.json();
+        
+            var color = '';
+            var descripcion = '';
+            var idRelacion = '';
+          
+            if(resultado.respuesta.relacion && resultado.respuesta.relacion.length>0 ){
+            
+                color = resultado.respuesta.relacion[0].color;
+                idRelacion = resultado.respuesta.relacion[0].id
+        
+                descripcion = resultado.respuesta.relacion[0].descripcion;
+            }
+         
+            asignatura1 = resultado.respuesta.asignatura1;
+           
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             asignatura2 = resultado.respuesta.asignatura2;
             nombre1= obtenerNombrePorIdioma(resultado.respuesta.asignatura1);
             nombre2= obtenerNombrePorIdioma(resultado.respuesta.asignatura2);
@@ -671,6 +977,7 @@ for (var i = 1; i < filas.length; i++) {
             info2 = obtenerInfo(asignatura2);
 
 
+<<<<<<< HEAD
             console.log(asignatura1);
       
              // links = sourceLinks.concat('LINKS',targetLinks);
@@ -729,6 +1036,51 @@ for (var i = 1; i < filas.length; i++) {
                     obtenerTemarios(tarea.id);
                 }
       */
+=======
+           
+      
+            var modal = document.createElement('div');
+            modal.classList.add('modalGrafo');
+            modal.innerHTML = `
+                <form class="formulario nueva-tarea" style="overflow: auto;">
+                    <div class="centrado">
+                        <legend class="centered-text">Relación de Asignaturas</legend>
+                        <h2 class="centered-text">${nombre1} y ${nombre2}</h2>
+                        <div class="campo">
+                            <label>Tipo de Relevancia:</label>
+                            <select name="tipo_relevancia" id="tipoRelevancia">
+                                <option value="2">Relevancia Fuerte</option>
+                                <option value="1">Relevancia Moderada</option>
+                                <option value="0">Relevancia Ligera</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label>Descripción de la Relación:</label>
+                            <textarea name="descripcion_relacion" id="descripcionRelacion" rows="4"></textarea>
+                        </div>
+                        <div class="campo" style="display: none;">
+                            <label>Tags en común:</label>
+                            <input type="text" id="tags" name="tags" disabled>
+                        </div>
+                        <div class="campo">
+                            <ul class="listado-asignaturas" id="listado-temas"></ul>
+                            <input type="hidden" class="formulario__listado" id="formulario__listado" name="lista_cursos" />
+                        </div>
+                        <div class="opciones">
+                            <input type="submit" class="submit-nueva-tarea" value="Guardar Cambios" />
+                            <button type="button" class="cerrar-modal">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            `;
+
+            // Añadir valores al formulario
+            document.body.appendChild(modal);
+          
+            document.getElementById('tipoRelevancia').value = color;
+            document.getElementById('descripcionRelacion').value = descripcion;
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
               setTimeout(() => {
                   const formulario = document.querySelector('.formulario');
@@ -746,7 +1098,11 @@ for (var i = 1; i < filas.length; i++) {
                 // Agregar un evento clic al botón del acordeón
               
       
+<<<<<<< HEAD
                console.log('1');
+=======
+            
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 // Crear una nueva fila
                 const fila = document.createElement('tr');
               
@@ -815,7 +1171,10 @@ for (var i = 1; i < filas.length; i++) {
                  
                     const tipoRelevancia = document.getElementById('tipoRelevancia').value.trim();
                 
+<<<<<<< HEAD
                    console.log('pasa'); 
+=======
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                    
                     if(descripcionRelacion === '') {
                         // Mostrar una alerta de error
@@ -832,7 +1191,11 @@ for (var i = 1; i < filas.length; i++) {
                     
                         
                     }*/ else {
+<<<<<<< HEAD
                         agregarRelacion(descripcionRelacion,tipoRelevancia,id1,id2);
+=======
+                        agregarRelacion(descripcionRelacion,tipoRelevancia,id1,id2, idRelacion);
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                         setTimeout(() => {
                             modal.remove();
                         }, 150);
@@ -846,6 +1209,7 @@ for (var i = 1; i < filas.length; i++) {
       
           }
 
+<<<<<<< HEAD
           async function agregarRelacion(descripcion,relacion,asignatura,asignatura1) {
             // Construir la petición
             const datos = new FormData();
@@ -853,11 +1217,28 @@ for (var i = 1; i < filas.length; i++) {
             datos.append('descripcion', descripcion
             );
             datos.append('color', relacion);
+=======
+          async function agregarRelacion(descripcion,relacion,asignatura,asignatura1,id) {
+            // Construir la petición
+            const datos = new FormData();
+         
+            if (id != '') {
+                datos.append('id', id);
+            }
+            datos.append('descripcion', descripcion
+            );
+            datos.append('color', relacion);
+            
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             datos.append('id_asignatura1', asignatura);
             datos.append('id_asignatura2', asignatura1);
            
            
+<<<<<<< HEAD
     
+=======
+    console.log('PRUEBAAAAAAAAAA')
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             try {
     
                 const url = 'http://localhost/UpTask_MVC/public/index.php/api/AnadirRelacion';
@@ -868,13 +1249,21 @@ for (var i = 1; i < filas.length; i++) {
                 });
              
                 const resultado = await respuesta.json();
+<<<<<<< HEAD
+=======
+                location.reload();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 mostrarAlerta(
                     resultado.mensaje, 
                     resultado.tipo, 
                     document.querySelector('.formulario legend')
                 );
 
+<<<<<<< HEAD
                 console.log(resultado.tipo);
+=======
+              
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     
                 if(resultado.tipo === 'exito') {
                     /*
@@ -884,11 +1273,21 @@ for (var i = 1; i < filas.length; i++) {
                         'success'
                     );
                     */
+<<<<<<< HEAD
     
                     const modal = document.querySelector('.modal');
                     if(modal) {
                         modal.remove();
                         window.location.reload();
+=======
+                   
+                    const modal = document.querySelector('.modal');
+                    if(modal) {
+                        
+                        window.location.reload();
+                        modal.remove();
+                      
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                     }
                    
                     
@@ -905,7 +1304,11 @@ for (var i = 1; i < filas.length; i++) {
 
           
 function obtenerNombrePorIdioma(obj) {
+<<<<<<< HEAD
     console.log(obj, idiomaSeleccionado)
+=======
+  
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     // Verifica si obj tiene la propiedad 'info' y no está vacía
     if (obj.info && obj.info.length > 0) {
         // Busca el objeto info que corresponde al idioma seleccionado
@@ -928,7 +1331,11 @@ function obtenerNombrePorIdioma(obj) {
   }
 
   function obtenerInfo(obj) {
+<<<<<<< HEAD
     console.log(obj, idiomaSeleccionado)
+=======
+    
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     // Verifica si obj tiene la propiedad 'info' y no está vacía
     if (obj.info && obj.info.length > 0) {
         // Busca el objeto info que corresponde al idioma seleccionado

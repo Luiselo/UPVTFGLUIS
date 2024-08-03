@@ -11,6 +11,36 @@ use Model\Asignatura_idiomas;
 use Model\Relaciones_Asignatura;
 use Model\Tags;
 class RelacionesController {
+<<<<<<< HEAD
+=======
+
+
+    public static function eliminarRelacion() {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            session_start();
+           $id = $_POST['id'];
+           $relacion = Relaciones_Asignatura::where('id',$id);
+           $relacion -> eliminar();           
+        }
+           
+       
+           
+        $respuesta = [
+                'tipo' => 'Exito',
+                'mensaje' => 'La relación ha sido eliminada correctamente.'
+            ];
+            echo json_encode($respuesta);
+            
+            
+           
+            
+          
+        }
+        
+    
+    
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     public static function index() {
         $proyectoId = $_GET['id'];
         $asignaturaId = $_GET['as'];
@@ -52,7 +82,12 @@ class RelacionesController {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             session_start();
+<<<<<<< HEAD
      
+=======
+          
+            
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             $relacion = new Relaciones_Asignatura();
             $relacion -> sincronizar($_POST);
        
@@ -62,17 +97,27 @@ class RelacionesController {
  
             $respuesta = [
                 'tipo' => 'exito',
+<<<<<<< HEAD
                 'id' => $resultado['id'],
+=======
+          
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 'mensaje' => 'Relación Asignada Correctamente',
             ];
             echo json_encode($respuesta);
          
+<<<<<<< HEAD
             
           
           
             
         }
     }
+=======
+        }
+    }
+   
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
 public static function inforelaciones(){
 

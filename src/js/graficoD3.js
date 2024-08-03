@@ -213,6 +213,15 @@ dx = d3.max(asignaturas, d => d.length)*3 +d3.max(asignaturas, d => d.length)/1,
 
 height = (data.flatMap(d => d.asignaturas).length - 1) * step + margin.top + margin.bottom
  
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 function obtenerNombrePorIdioma(obj) {
 
   // Verifica si obj tiene la propiedad 'info' y no está vacía
@@ -235,7 +244,16 @@ function obtenerNombrePorIdioma(obj) {
   // Si obj.info está vacío o no se encuentra el idioma seleccionado ni el primer idioma, devuelve obj.nombre
   return obj.asignatura;
 }
+<<<<<<< HEAD
 
+=======
+//Nodos
+
+function obtenerAñoCurdo(id){
+  data
+
+}
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 function obtenersSiglaPorIdioma(obj) {
  
 
@@ -496,7 +514,10 @@ path.each(function(d) {
     miFuncionExterna(d, pvg,color,relaciones);
   });
 
+<<<<<<< HEAD
 //Imprimir Grafo principal
+=======
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
  
   if(grafico == 1){

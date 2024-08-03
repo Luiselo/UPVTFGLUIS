@@ -30,6 +30,10 @@ class Router
         
 
         if ( $fn ) {
+<<<<<<< HEAD
+=======
+           
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             // Call user fn va a llamar una función cuando no sabemos cual sera
             call_user_func($fn, $this); // This es para pasar argumentos
         } else {

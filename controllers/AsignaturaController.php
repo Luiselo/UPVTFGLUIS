@@ -14,9 +14,37 @@ use Model\Tags_Asignatura;
 use Model\Relaciones_Asignatura;
 
 class AsignaturaController {
+<<<<<<< HEAD
     public static function index() {
        
         $proyectoId = $_GET['id'];
+=======
+    private static function loadLanguage() {
+        // Start the session if it hasn't been started yet
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Default language
+        $lang = 'es';
+
+        // Check if a language is set in the session or query parameters
+        if (isset($_GET['lang'])) {
+            $lang = $_GET['lang'];
+            $_SESSION['lang'] = $lang;
+        } elseif (isset($_SESSION['lang'])) {
+            $lang = $_SESSION['lang'];
+        }
+
+        // Load the language helper
+        require_once __DIR__ . '/../helper/language_helper.php';
+        return $lang;
+    }
+    public static function index() {
+       
+        $proyectoId = $_GET['id'];
+  
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         $proyecto = AnoCurso::where('id', $proyectoId);
      
         session_start();
@@ -117,7 +145,12 @@ class AsignaturaController {
             
             $cursoId = $_POST['id'];
             $asignatura = Asignatura::where('id', $cursoId);
+<<<<<<< HEAD
             $tags = Tags_Asignatura::where('idAsignatura',$asignatura-> id);
+=======
+           $tags = Tags_Asignatura::where('idAsignatura',$asignatura-> id);
+           
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
          
             $relaciones = Relaciones_Asignatura::eliminarasignatura($asignatura->id);
             if($tags)
@@ -319,6 +352,7 @@ class AsignaturaController {
     }
 
     public static function crearAno() {
+<<<<<<< HEAD
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
             $curso = new AnoCurso($_POST);
@@ -328,10 +362,39 @@ class AsignaturaController {
                 $alertas = AnoCurso::getAlertas();
             }
             if(empty($alertas)) {
+=======
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            session_start();
+            $curso = new AnoCurso($_POST);
+            $existeAnoCurso = AnoCurso::where3('idCurso', $curso->idCurso, 'numero', $curso->numero, 'descripcion', $curso->descripcion);
+    
+            // Cargar el idioma
+            $lang = self::loadLanguage();
+    
+            // Traducciones
+            $mensaje_exito = [
+                'es' => 'Curso creado correctamente',
+                'en' => 'Course created successfully',
+                'eus' => 'Ikastaroa ongi sortu da'
+            ];
+            $mensaje_error = [
+                'es' => 'Ya hay un semestre con esta descripción',
+                'en' => 'There is already a semester with this description',
+                'eus' => 'Deskribapen honekin dagoeneko seihileko bat dago'
+            ];
+    
+            if ($existeAnoCurso) {
+                AnoCurso::setAlerta('error', $mensaje_error[$lang]);
+                $alertas = AnoCurso::getAlertas();
+            }
+    
+            if (empty($alertas)) {
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
                 $resultado = $curso->guardar();
                 $respuesta = [
                     'tipo' => 'exito',
                     'id' => $resultado['id'],
+<<<<<<< HEAD
                     'mensaje' => 'Asignatura Creada Correctamente',
                 ];
             }else{
@@ -343,6 +406,21 @@ class AsignaturaController {
             echo json_encode($respuesta);
         }
     }
+=======
+                    'mensaje' => $mensaje_exito[$lang],
+                ];
+            } else {
+                $respuesta = [
+                    'tipo' => 'error',
+                    'mensaje' => $mensaje_error[$lang]
+                ];
+            }
+            
+            echo json_encode($respuesta);
+        }
+    }
+    
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
     
 
@@ -351,7 +429,11 @@ class AsignaturaController {
             session_start();
           
            $id = $_POST['idCurso'];
+<<<<<<< HEAD
            
+=======
+           $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
             $tags = $_POST['tags'];
             $eliminar = Tags::eliminarTags('cursoID', $id);
 
@@ -369,6 +451,7 @@ class AsignaturaController {
             
 
 
+<<<<<<< HEAD
 
            
        
@@ -376,6 +459,20 @@ class AsignaturaController {
                 'tipo' => 'exito',
                 'mensaje' => 'Tag creado correctamente'
             ];
+=======
+    // Traducciones
+    $mensaje_exito = [
+        'es' => 'Tag creado correctamente',
+        'en' => 'Tag created successfully',
+        'eus' => 'Etiketa ongi sortu da'
+    ];
+           
+       
+    $respuesta = [
+        'tipo' => 'exito',
+        'mensaje' => $mensaje_exito[$lang] // Mensaje traducido según el idioma
+    ];
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
            
             echo json_encode($respuesta);
         }

@@ -1,0 +1,105 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.modal {
+    position: absolute;
+    background-color: rgb( 0 0 0 / .8);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+
+    .formulario {
+        max-width: 60rem;
+        background-color: v.$blanco;
+        padding: 2rem;
+        margin: 0 auto;
+        transform: translateY(-30rem);
+        transition-property: all;
+        transition-duration: 500ms;
+        transition-timing-function: ease-in-out;
+        opacity: 0;
+        border-radius: 1rem;
+       
+        
+        dl {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: left;
+           
+           
+          }
+        
+
+        dt, input {
+            flex-basis: calc(50% - 10px);
+            padding: 5px;
+            margin: 0;
+            box-sizing: border-box;
+          }
+        
+        legend {
+            font-size: 2rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            display: block;
+        }
+        input[type="text"] {
+            border: 1px solid v.$gris;
+            border-radius: .5rem;
+        }
+        .listado-tags {
+            max-height: 200px; /* Ejemplo de altura máxima */
+            overflow-y: auto; /* Habilita el desplazamiento vertical */
+            /* Otros estilos opcionales */
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .listado-tags li {
+            /* Estilos anteriores */
+            position: relative; /* Permite posicionar de forma absoluta el botón */
+        }
+        
+        .listado-tags li button {
+            position: absolute; /* Posición absoluta para superponer el botón */
+            top: 50%; /* Alinea verticalmente al centro */
+            right: 10px; /* Alinea a la derecha con un pequeño espacio */
+            transform: translateY(-50%); /* Ajusta la posición verticalmente */
+            background-color: transparent; /* Fondo transparente */
+            border: none; /* Sin borde */
+            color: #777; /* Color del texto gris */
+            font-size: 12px; /* Tamaño de la fuente */
+            cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+            transition: color 0.3s ease; /* Transición suave del color */
+        }
+        
+        .listado-tags li button:hover {
+            color: #333; /* Cambia el color del texto al pasar el cursor */
+        }
+        
+        .opciones {
+            display: flex;
+            justify-content: space-between;
+        }
+        .submit-nueva-tarea {
+            @include m.boton(v.$indigo, v.$blanco);
+        }
+        .cerrar-modal {
+            @include m.boton(v.$naranja, v.$blanco);
+        }
+
+        &.animar {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 1;
+        }
+        &.cerrar {
+            transform: translateY(-200%);
+            opacity: 0;
+        }
+    }
+}

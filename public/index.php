@@ -52,11 +52,19 @@ $router->get('/crear-proyecto', [DashboardController::class, 'crear_proyecto']);
 $router->get('/olvide', [LoginController::class, 'olvide']);
 $router->post('/olvide', [LoginController::class, 'olvide']);
 
+<<<<<<< HEAD
+=======
+//Crear
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 $router->get('/panel/anocurso', [DashboardController::class, 'anocurso']);
 $router->post('/panel/anocurso', [DashboardController::class, 'anocurso']);
 $router->post('/api/eliminarasignatura', [AsignaturaController::class, 'eliminarasignatura']);
 $router->post('/api/eliminarCurso', [AsignaturaController::class, 'eliminarCurso']);
 $router->post('/api/eliminarGrado', [AsignaturaController::class, 'eliminarGrado']);
+<<<<<<< HEAD
+=======
+//CrearAno
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 $router->post('/api/anocurso', [AsignaturaController::class, 'crearAno']);
 
 $router->post('/api/anadirTags', [AsignaturaController::class, 'anadirTags2']);
@@ -92,6 +100,10 @@ $router->get('/api/anadirTag', [AsignaturaController::class, 'anadirTags']);
 $router->get('/api/relacion', [RelacionesController::class, 'index']);
 $router->post('/api/relacion', [RelacionesController::class, 'modificar']);
 $router->post('/api/AnadirRelacion', [RelacionesController::class, 'AnadirRelacion']);
+<<<<<<< HEAD
+=======
+$router->post('/api/eliminarRelacion', [RelacionesController::class, 'eliminarRelacion']);
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
 
 $router->get('/api/relaciones', [DashboardController::class, 'relaciones']);

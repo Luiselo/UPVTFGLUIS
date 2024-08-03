@@ -8,11 +8,34 @@ use Model\Curso;
 use Model\AnoCurso;
 use Classes\Email;
 class LoginController {
+<<<<<<< HEAD
 
     public static function inicio(Router $router) {
     
       
         
+=======
+    private static function loadLanguage() {
+        // Default language
+        $lang = 'es';
+
+        // Check if a language is set in the session or query parameters
+        if (isset($_GET['lang'])) {
+            $lang = $_GET['lang'];
+            $_SESSION['lang'] = $lang;
+        } elseif (isset($_SESSION['lang'])) {
+            $lang = $_SESSION['lang'];
+        }
+
+        // Load the language helper
+        require_once __DIR__ . '/../helper/language_helper.php';
+        return $lang;
+    }
+    public static function inicio(Router $router) {
+    
+      
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         $cursos = [];
    
         $cursos = curso::all();
@@ -35,7 +58,11 @@ class LoginController {
 
         
         $router->render('dashboard/inicio', [
+<<<<<<< HEAD
             'titulo' => 'Visualizador de asignaturas','cursos' => $cursos ]);
+=======
+            'titulo' => 'Catálogo de Grados Universitarios','cursos' => $cursos ]);
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
      
         /*
@@ -43,6 +70,10 @@ class LoginController {
         */
     }
     public static function login(Router $router) {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
      
         $alertas = [];
 
@@ -98,6 +129,10 @@ class LoginController {
 
 
     public static function crear(Router $router) {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         $alertas = [];
         $usuario = new Usuario;
 
@@ -161,6 +196,10 @@ class LoginController {
     }
 
     public static function restablecer() {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         
         echo ("echo desde restablecer");
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -169,6 +208,10 @@ class LoginController {
     }
 
     public static function reestablecer(Router $router) {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
         $token = s($_GET['token']);
         $mostrar = true;
@@ -220,12 +263,20 @@ class LoginController {
 
 
     public static function mensaje(Router $router) {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
         $router->render('auth/confirmar', [
             'titulo' => 'Cuenta Creada Exitosamente'
         ]);
     }
     public static function confirmar(Router $router) {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         
         $token = s($_GET['token']);
 
@@ -257,6 +308,10 @@ class LoginController {
         ]);
     }
     public static function olvide(Router $router) {
+<<<<<<< HEAD
+=======
+        $lang = self::loadLanguage();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = new Usuario($_POST);

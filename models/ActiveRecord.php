@@ -42,6 +42,19 @@ class ActiveRecord {
         }
         return $resultado;
     }
+<<<<<<< HEAD
+=======
+    public function guardarsinId() {
+        
+        $resultado = '';
+       
+        
+            // Creando un nuevo registro
+            $resultado = $this->crear();
+        
+        return $resultado;
+    }
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
     public static function all() {
         $query = "SELECT * FROM " . static::$tabla;

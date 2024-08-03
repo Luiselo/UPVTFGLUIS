@@ -1,0 +1,282 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.modalGrafo {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  left: 0;
+  
+  right: 0;
+  bottom: 0;
+  .Info {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .info-campo {
+    display: flex;
+    flex-basis: calc(100% - 20px);
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .columna {
+    flex-basis: 50%;
+    padding: 10px;
+  }
+  
+  h3 {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 50vh;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    resize: vertical;
+  }
+  
+  
+  /* Estilo adicional según tus necesidades */
+  
+  
+  /* Estilo adicional según tus necesidades */
+  
+  .PanelInfo {
+    display: grid;
+  grid-template-columns: repeat(2, 1fr);
+ 
+
+  }
+  .formulario.nueva-tarea h2 {
+    font-size: 24px;
+    margin: 0;
+    color: #333;
+  }
+  
+  .formulario.nueva-tarea h4 {
+   
+    margin: 10px 0;
+    color: #555;
+  }
+  .formulario {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 93%;
+    height: 90%;
+    background-color: v.$blanco;
+    padding: 2rem;
+    align-items: center;
+    margin: 0 auto;
+    transform: translateY(-30rem);
+    transition-property: all;
+    transition-duration: 500ms;
+    transition-timing-function: ease-in-out;
+    opacity: 0;
+    border-radius: 1rem;
+    overflow: auto;
+
+   
+
+
+    .campo {
+      margin: 10px 0;
+      width: 80%;
+      align-items: center;
+      text-align: left;
+    
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+    
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid v.$gris;
+        border-radius: 0.5rem;
+        padding: 8px;
+      }
+    
+      select {
+        height: 40px; // Altura del select
+      }
+    
+      textarea {
+        height: 200px; // Altura del textarea (ajusta según tus necesidades)
+      }
+    }
+    
+    .relaciones-tabla {
+      font-size: 14px; /* Ajusta el tamaño del texto según tus preferencias */
+      border-collapse: collapse; /* Combina los bordes de las celdas */
+    }
+    
+    .relaciones-tabla th, .relaciones-tabla td {
+      padding: 5px 10px; /* Ajusta el espaciado interior de las celdas */
+      border: 1px solid #ccc; /* Agrega bordes a las celdas si es necesario */
+    }
+ .centrado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+    .centered-text {
+      text-align: center;
+    }
+
+    dl {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between; /* Changed from 'center' to 'space-between' */
+      text-align: left;
+    }
+
+    dt,
+    input {
+      flex-basis: calc(50% - 10px);
+      padding: 5px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    legend {
+      font-size: 2rem;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 2rem;
+      display: block;
+    }
+
+    input[type="text"] {
+      border: 1px solid v.$gris;
+      border-radius: 0.5rem;
+    }
+
+    .opciones {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem; /* Added margin to create space between options and the form */
+    }
+
+    .submit-nueva-tarea {
+      @include m.boton(v.$indigo, v.$blanco);
+    }
+
+    .cerrar-modal {
+      @include m.boton(v.$naranja, v.$blanco);
+    }
+
+    &.animar {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 1;
+    }
+
+    &.cerrar {
+      transform: translateY(-200%);
+      opacity: 0;
+    }
+
+    .moda-info {
+      width: 80%;
+      margin: 0 auto;
+      display: flex;
+    }
+
+    .modal-columna {
+      width: 50%;
+      display: inline-block;
+      vertical-align: top;
+      box-sizing: border-box;
+
+
+  /* Style for the accordion */
+  .accordion-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.accordion-content {
+    display: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+
+    .editable-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        width: 100%; /* Ancho del contenedor */
+        border: 1px solid #ccc;
+        padding: 10px;
+        transition: height 0.3s ease; /* Animación de expansión */
+       
+        
+    }
+    #guiadocente {
+        min-height: 100px; /* Ajusta este valor según tus necesidades */
+        resize: none; /* Evita que el usuario pueda cambiar el tamaño del textarea manualmente */
+        overflow: hidden; /* Evita que se muestre una barra de desplazamiento */
+    }
+    .editable-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        cursor: pointer;
+    }
+    .arrow-button {
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: transform 0.3s ease; /* Animación de rotación */
+    }
+    .arrow-down {
+        transform: rotate(45deg);
+    }
+    .arrow-up {
+        transform: rotate(-135deg);
+    }
+    .textarea-container {
+        display: none;
+        width: 100%;
+    }
+    .textarea-container textarea {
+        width: 100%;
+        height: 200px; /* Altura del textarea */
+        border: 1px solid #ccc;
+    }
+}
+.verde {
+    background-color: green;
+    color: white; /* Cambia el color del texto si es necesario para mejorar la legibilidad */
+}
+
+    }
+    
+
+    .asignatura {
+      /* Add styles for the information of the assignments as needed */
+    }
+  }
+}

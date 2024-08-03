@@ -11,7 +11,12 @@ class Tags_Asignatura extends ActiveRecord {
 
     public function __construct($args = [])
     {
+<<<<<<< HEAD
         $this->idTag = $args['idTag'] ?? null;
+=======
+        
+        $this->idTag = $args['idTag'] ?? '';
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         $this->idAsignatura =$args['idAsignatura'] ?? '';
       
         

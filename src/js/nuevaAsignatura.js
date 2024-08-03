@@ -1,5 +1,6 @@
 let asignaturas = [];
 let cursos = [];
+<<<<<<< HEAD
 console.log()
 const cursoDiv = document.getElementById("listado-asignaturas");
 const cursosInputHidden = document.getElementById("formulario__Idioma");
@@ -9,10 +10,44 @@ nuevoTagsBtn.addEventListener('click', function() {
 
     
     mostrarTags2(tags)
+=======
+let tagsFiltro = filteredTags;
+console.log('1')
+
+function generateSigla(idTitle, idSigla) {
+  const titleInput = document.getElementById(idTitle);
+  const siglaInput = document.getElementById(idSigla);
+  
+  titleInput.addEventListener('input', function() {
+      const words = titleInput.value.trim().split(/\s+/);
+      const sigla = words.map(word => word.charAt(0).toUpperCase()).join('');
+      siglaInput.value = sigla;
+  });
+}
+console.log('2')
+window.onload = function() {
+  generateSigla('nombreES', 'siglaES');
+  generateSigla('nombreEU', 'siglaEU');
+  generateSigla('nombreEN', 'siglaEN');
+}
+console.log('1')
+const cursoDiv = document.getElementById("listado-asignaturas");
+const listado = document.getElementById("listado-temas");
+const cursosInputHidden = document.getElementById("formulario__Idioma");
+const tagInputHidden = document.getElementById("formulario__tag");
+
+const nuevoTagsBtn = document.getElementById('editar-Tag');
+nuevoTagsBtn.addEventListener('click', function() {
+  console.log('3')
+ 
+    
+    mostrarTags2(tags,filteredTags)
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     //mostrarFormularioTag(false,tags);
 });
 
 
+<<<<<<< HEAD
 function mostrarTags2(tags) {
        
 
@@ -162,6 +197,119 @@ checkboxes.forEach((checkbox) => {
         const cursosInputHidden = document.getElementById("contenido");
       //  cursosInputHidden.addEventListener('keypress', guardarTag);
     }
+=======
+console.log('4')
+
+function mostrarTags2(tags, filteredTags) {
+  console.log('POR EL AMOR DE deLX');
+
+  const modal = document.createElement('div');
+  modal.classList.add('modalTags');
+  modal.innerHTML = `
+    <form class="formulario nueva-tarea">
+        <legend>Lista de Tags</legend>
+        <div class="modal-content">
+            <div id="listaTagsModal" class="listaTagsModal">
+            </div>
+        </div>
+        <div class="opciones">
+            <button type="button" class="submit-nueva-tarea">Filtrar Tags</button>
+            <button type="button" class="cerrar-modal">Cancelar</button>
+        </div>    
+    </form>
+  `;
+  document.body.appendChild(modal);
+
+  const tagsContainer = modal.querySelector("#listaTagsModal");
+
+  tags.forEach(tag => {
+    const tagContainer = document.createElement("div");
+    tagContainer.classList.add("tag-container");
+
+    // Crear un elemento de casilla de verificación (checkbox)
+    const tagCheckbox = document.createElement("input");
+    tagCheckbox.type = "checkbox";
+    tagCheckbox.value = JSON.stringify(tag);
+    tagCheckbox.classList.add("tag");
+
+    // Verificar si el tag está en filteredTags y marcar el checkbox si es así
+    if (filteredTags.some(filteredTag => filteredTag.id === tag.id)) {
+      tagCheckbox.checked = true;
+    }
+
+    // Crear un elemento de etiqueta (label)
+    const label = document.createElement("label");
+    label.classList.add("tag-label");
+    label.textContent = tag.descripcion;
+
+    // Agregar el checkbox y el label al contenedor del tag
+    tagContainer.appendChild(tagCheckbox);
+    tagContainer.appendChild(label);
+
+    // Agregar el tagContainer al contenedor principal (listaTagsModal)
+    tagsContainer.appendChild(tagContainer);
+  });
+
+  const checkboxes = document.querySelectorAll(".tag");
+  console.log('3');
+
+  modal.addEventListener('click', function(e) {
+    // Verifica si el evento proviene de una casilla de verificación con la clase "tag"
+    if (e.target.classList.contains('tag')) {
+      const checkbox = e.target;
+      const tagId = checkbox.value;
+      const isChecked = checkbox.checked;
+      // Haz lo que necesites con el tagId y el valor isChecked
+    }
+
+    if (e.target.classList.contains('cerrar-modal')) {
+      const formulario = document.querySelector('.formulario');
+      formulario.classList.add('cerrar');
+      setTimeout(() => {
+        modal.remove();
+      }, 150);
+    }
+    console.log('4');
+    if (e.target.classList.contains('submit-nueva-tarea')) {
+      const formulario = document.querySelector('.formulario');
+      formulario.classList.add('cerrar');
+
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]'); // Asegúrate de seleccionar los checkboxes correctos
+     tagsFiltro = [];
+    console.log('pasaaaaaaaaaaaaa')
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          // Convertir la cadena JSON a un objeto
+          const checkboxObject = JSON.parse(checkbox.value);
+          // Guardar el objeto en el array tagsFiltro
+          tagsFiltro.push(checkboxObject); // Asegúrate de que cada checkbox tenga un valor correcto
+        }
+      });
+
+      if (tagsFiltro.length > 0) {
+        console.log('hay filtrados.');
+        // Aquí puedes llamar a una función para manejar los tags filtrados si es necesario
+        mostrarTags();
+    } else {
+        console.log('No hay tags filtrados.');
+    }
+
+      setTimeout(() => {
+        modal.remove();
+      }, 150);
+    }
+  });
+
+  document.querySelector('.dashboard').appendChild(modal);
+}
+if (tagsFiltro.length > 0) {
+  console.log('hay filtrados.');
+  // Aquí puedes llamar a una función para manejar los tags filtrados si es necesario
+  mostrarTags();
+  
+  }
+console.log('5');
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 function mostrarFormularioTag(editar = false, tareas) {
   const modal = document.createElement('DIV');
   modal.classList.add('modal');
@@ -199,10 +347,18 @@ function mostrarFormularioTag(editar = false, tareas) {
 
         const checkbox = e.target;
          // Cambiar el estado del checkbox
+<<<<<<< HEAD
          console.log('the grefg2',e.target);
          checkbox.checked = !checkbox.checked;
        
         console.log('the grefg2',e.target);
+=======
+    
+         checkbox.checked = !checkbox.checked;
+       
+        
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         // Haz lo que necesites con el tagId y el valor isChecked
     }
       if (e.target.classList.contains('cerrar-modal')) {
@@ -213,7 +369,11 @@ function mostrarFormularioTag(editar = false, tareas) {
           }, 500);
       }
       if (e.target.classList.contains('submit-nueva-tarea')) {
+<<<<<<< HEAD
           actualizarListadoTags();
+=======
+          mostrarTags();
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
       }
   });
@@ -250,6 +410,10 @@ const checkboxes = document.querySelectorAll(".tagch");
   });
 
   function actualizarListadoTags() {
+<<<<<<< HEAD
+=======
+    console.log('heyy')
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
       listadoTags.innerHTML = '';
       tareas.forEach(tag => {
           const li = document.createElement('div');
@@ -275,6 +439,10 @@ const checkboxes = document.querySelectorAll(".tagch");
     // Construir la petición
     const datos = new FormData();
     datos.append('tags', tags);
+<<<<<<< HEAD
+=======
+   
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     
     datos.append('idCurso', obtenerProyecto());
 
@@ -282,11 +450,16 @@ const checkboxes = document.querySelectorAll(".tagch");
     try {
 
         const url = 'http://localhost/UpTask_MVC/public/index.php/api/anadirTagAsignatura';
+<<<<<<< HEAD
         console.log('heyyy')
+=======
+      
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         const respuesta = await fetch(url, {
             method: 'POST',
             body: datos
         });
+<<<<<<< HEAD
         console.log('heyyy');
         const resultado = await respuesta.json();
         console.log('heyyy');
@@ -294,14 +467,25 @@ const checkboxes = document.querySelectorAll(".tagch");
        
         const prueba = document.querySelector('.formulario legend');
 console.log(prueba);
+=======
+  
+        const resultado = await respuesta.json();
+   
+        const prueba = document.querySelector('.formulario legend');
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         mostrarAlerta(
             resultado.mensaje, 
             resultado.tipo, 
             document.querySelector('.formulario legend')
             
         );
+<<<<<<< HEAD
         console.log('heyyy')
         console.log(resultado)
+=======
+     
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         if(resultado.tipo === 'exito') {
             Swal.fire(
                 resultado.mensaje,
@@ -337,7 +521,11 @@ console.log(prueba);
       }, 3000);
   }
 }
+<<<<<<< HEAD
 
+=======
+console.log('3')
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 // CSS básico para asegurar que los checkboxes sean visibles
 const style = document.createElement('style');
 style.innerHTML = `
@@ -354,6 +542,7 @@ if (cursosInputHidden.value !== '') {
     asignaturas =  cursosInputHidden.value.split(',');
 }
 
+<<<<<<< HEAD
 console.log(asignaturas);
 console.log('1')
 cursoDiv.innerHTML = '';
@@ -386,6 +575,58 @@ function actualizarInputHidden() {
     const ventanaEmergente = document.getElementById('ventanaEmergente');
     const listaTags = document.getElementById('listaTags');
     console.log('3')
+=======
+
+cursoDiv.innerHTML = '';
+
+
+
+function mostrarTags() {
+  console.log('alizz')
+    const cursoDiv = document.getElementById("listado-temas");
+    const contenido = document.getElementById("contenido");
+  
+    cursoDiv.innerHTML = '';
+    contenido.innerHTML = '';
+    console.log('alizz', tagsFiltro)
+    tagsFiltro.forEach(curso => {
+      const etiqueta = document.createElement('LI');
+      etiqueta.classList.add('curso_lista');
+      etiqueta.textContent = curso.descripcion;
+      console.log('descripcion', curso.descripcion)
+      etiqueta.ondblclick = eliminarTags;
+      cursoDiv.appendChild(etiqueta);
+      actualizarInputHidden();
+    });
+
+    function eliminarTags(e) {
+      e.target.remove();
+      const divForm = document.getElementById(e);
+    console.log('no hay mayor ciego que el que no quiere ver',e)
+       aux = tagsFiltro.filter(curso=> 
+        
+        curso.descripcion !== e.target.textContent);
+      console.log('PRUEBAAAAAAAAA',aux)
+      tagsFiltro = aux;
+      console.log('heyyyyyyyyyyyyyyyyyyyyy',tagsFiltro, aux)
+      actualizarInputHidden();
+  }
+ 
+}
+
+function actualizarInputHidden() {
+  console.log('prueba', tagsFiltro)
+  
+  tagInputHidden.value = JSON.stringify(tagsFiltro);
+    console.log(tagInputHidden)
+}
+
+(function() {
+    //const btnAgregarTags = document.getElementById('btnAgregarTags');
+    const ventanaEmergente = document.getElementById('ventanaEmergente');
+    const listaTags = document.getElementById('listaTags');
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     function obtenerProyecto() {
         const proyectoParams = new URLSearchParams(window.location.search);
         const proyecto = Object.fromEntries(proyectoParams.entries());
@@ -396,7 +637,11 @@ function actualizarInputHidden() {
         obtenerTags(obtenerProyecto());
     });
   */
+<<<<<<< HEAD
     console.log('4')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     asignaturas.forEach(curso => {
         const etiqueta = document.createElement('LI');
         etiqueta.classList.add('curso_lista');
@@ -412,7 +657,11 @@ function actualizarInputHidden() {
     idiomaSelect.addEventListener("change", function() {
         guardarIdioma(idiomaSelect.value);
     });
+<<<<<<< HEAD
     console.log('5')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     function guardarTag(e) {
         if (e.keyCode === 44) {
             e.preventDefault();
@@ -444,7 +693,11 @@ function actualizarInputHidden() {
         const cursosInputHidden = document.getElementById("formulario__Idioma");
         cursosInputHidden.value = asignaturas.toString();
     }
+<<<<<<< HEAD
     console.log('7')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     function eliminarIdioma(e) {
         e.target.remove();
         const divForm = document.getElementById(e.target.textContent);
@@ -459,7 +712,11 @@ function actualizarInputHidden() {
             mostrarIdioma(value);
         }
     }
+<<<<<<< HEAD
     console.log('8')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     function mostrarTags() {
         const cursoDiv = document.getElementById("listado-temas");
         const contenido = document.getElementById("contenido");
@@ -478,7 +735,11 @@ function actualizarInputHidden() {
         const cursosInputHidden = document.getElementById("formulario__listado");
         cursosInputHidden.value = cursos.toString();
     }
+<<<<<<< HEAD
     console.log('9')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     function eliminarTag(e) {
         e.target.remove();
         cursos = cursos.filter(curso => curso.descripcion !== e.target.textContent);
@@ -502,13 +763,21 @@ function leerContenido() {
         })
         .then(data => {
             resultado.innerHTML = '<h2>Contenido de la página:</h2><pre>' + data + '</pre>';
+<<<<<<< HEAD
             console.log(data);
+=======
+     
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
         })
         .catch(error => {
             resultado.innerHTML = 'Error: ' + error.message;
         });
 }
+<<<<<<< HEAD
 console.log('11')
+=======
+
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 async function editarRelacion(id1, id2) {
     const url = `http://localhost/UpTask_MVC/public/index.php/api/asignaturasRelacion?id1=${id1}&id2=${id2}`;
     const respuesta = await fetch(url);
@@ -521,7 +790,10 @@ async function editarRelacion(id1, id2) {
     const info1 = obtenerInfo(asignatura1);
     const info2 = obtenerInfo(asignatura2);
 
+<<<<<<< HEAD
     console.log(asignatura1);
+=======
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
 
     const modal = document.createElement('DIV');
     modal.classList.add('modalGrafo');
@@ -613,12 +885,19 @@ async function editarRelacion(id1, id2) {
     const formulario = document.querySelector('.formulario');
     formulario.addEventListener('submit', (e) => {
         e.preventDefault();
+<<<<<<< HEAD
         console.log("Guardando datos");
         console.log(asignatura1);
         const guiadocente1 = document.getElementById('guiadocente').value;
         const contenidos1 = document.getElementById('contenidos').value;
         console.log(guiadocente1);
         console.log(contenidos1);
+=======
+     
+        const guiadocente1 = document.getElementById('guiadocente').value;
+        const contenidos1 = document.getElementById('contenidos').value;
+      
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)
     });
 }
 
@@ -645,4 +924,7 @@ function expandTextArea(editLabel) {
     arrowButton.classList.toggle('arrow-down');
     arrowButton.classList.toggle('arrow-up');
 }
+<<<<<<< HEAD
 console.log('13')
+=======
+>>>>>>> 25b85b50 (Inicial commit del proyecto UpTask_MVC)

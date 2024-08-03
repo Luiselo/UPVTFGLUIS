@@ -1,0 +1,225 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+/* Style for the entire form */
+
+    .relacion {
+       
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f7f7f7;
+       
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+        
+
+        dl {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Alinea los elementos al centro */
+            text-align: left; /* Alinea el texto a la izquierda dentro de cada elemento */
+            .listado-asignaturas{
+                list-style: none;
+                padding: 0;
+                margin-top: 1rem;
+                text-align: center;
+                @include m.tags;
+                .curso_lista{
+                    margin-top: 1rem;
+                    padding: .5rem 2rem;
+                    border-bottom: 3px solid darken(v.$grisClaro, 5%);
+                    margin-bottom: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+            .no-tareas {
+                text-align: center;
+            }
+
+            }
+
+          }
+        
+          dt, dd {
+            flex-basis: calc(50% - 10px); /* Ajusta el ancho de las columnas según tus necesidades y reduce el espacio entre columnas */
+            padding: 5px;
+            margin: 0;
+            box-sizing: border-box;
+            max-width: 400px;
+          }
+          dl {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: left;
+            padding: 4px;
+            margin: 0 10px 10px 0;
+          }
+        
+
+         .relacionInput {
+            flex-basis: calc(50% - 0px);
+            padding: 4px;
+            margin: 10px;
+            box-sizing: border-box;
+            border: 1px solid v.$gris;
+            border-radius: .2rem;
+            padding: 4px;
+            margin: 0 10px 10px 0;
+          }
+        dt {
+            display: inline-block;
+            float: left;
+            min-width: 260px;
+            font-family: "ehuSans",sans-serif;
+            text-transform: uppercase;
+            color: #5c5c5c;
+            margin-bottom: 25px;
+            clear: both;
+            font-weight: 700;
+          }
+          button {
+            margin-top: 10px; /* Ajusta el espacio entre la lista y el botón */
+          }
+   
+    }
+    
+    /* Style for the legend */
+    .relacion legend {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+    
+    /* Style for labels and inputs */
+    .relacion label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    .relacion input[type="text"] {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+    
+    /* Style for the table */
+    .relaciones-tabla {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    .relaciones-tabla th, .relaciones-tabla td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    .relaciones-tabla th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+    
+    /* Style for the accordion */
+    .accordion-button1, .accordion-button2 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    
+    .accordion-content1, .accordion-content2 {
+
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+
+        .editable-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            width: 100%; /* Ancho del contenedor */
+            border: 1px solid #ccc;
+            padding: 10px;
+            transition: height 0.3s ease; /* Animación de expansión */
+           
+            
+        }
+        #guiadocente {
+            min-height: 100px; /* Ajusta este valor según tus necesidades */
+            resize: none; /* Evita que el usuario pueda cambiar el tamaño del textarea manualmente */
+            overflow: hidden; /* Evita que se muestre una barra de desplazamiento */
+        }
+        .editable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+        .arrow-button {
+            border: solid black;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 3px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease; /* Animación de rotación */
+        }
+        .arrow-down {
+            transform: rotate(45deg);
+        }
+        .arrow-up {
+            transform: rotate(-135deg);
+        }
+        .textarea-container {
+            display: none;
+            width: 100%;
+        }
+        .textarea-container textarea {
+            width: 100%;
+            height: 200px; /* Altura del textarea */
+            border: 1px solid #ccc;
+        }
+    }
+    .verde {
+        background-color: green;
+        color: white; /* Cambia el color del texto si es necesario para mejorar la legibilidad */
+    }
+    /* Estilo para filas seleccionadas */
+.seleccionada {
+    background-color: lightblue;
+    /* Puedes personalizar este estilo a tu gusto */
+  }
+  
+ 
+  
+    /* Style for the options and buttons */
+    .opciones {
+        margin-top: 20px;
+        text-align: right;
+    }
+    
+    .cerrar-modal {
+        background-color: #ccc;
+        color: #000;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    
+    /* Hover effect for buttons */
+    .cerrar-modal:hover, .accordion-button:hover {
+        background-color: #333;
+        color: #fff;
+    }
+    
+  
